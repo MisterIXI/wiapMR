@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "IDE Setup.md",
+            "file": "Unity play mode on Hololens.md",
             "mode": "source",
             "source": false
           }
@@ -69,7 +69,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "IDE Setup.md",
+                "file": "Unity play mode on Hololens.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -88,9 +88,11 @@
   },
   "active": "e2e1fb15a9dd2a70",
   "lastOpenFiles": [
+    "Unity play mode on Hololens.md",
     "IDE Setup.md",
-    "Pasted image 20220419232028.png.md",
     "Kanban.md",
+    "Sound.md",
+    "Pasted image 20220419232028.png.md",
     "TimeTracker.md"
   ]
 }
