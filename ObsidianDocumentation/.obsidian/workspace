@@ -7,8 +7,10 @@
         "id": "e2e1fb15a9dd2a70",
         "type": "leaf",
         "state": {
-          "type": "empty",
-          "state": {}
+          "type": "kanban",
+          "state": {
+            "file": "Kanban.md"
+          }
         }
       }
     ],
@@ -65,6 +67,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Kanban.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -82,5 +85,8 @@
     "width": 300
   },
   "active": "e2e1fb15a9dd2a70",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "Kanban.md",
+    "TimeTracker.md"
+  ]
 }
