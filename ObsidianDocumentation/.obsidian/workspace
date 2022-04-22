@@ -7,9 +7,11 @@
         "id": "e2e1fb15a9dd2a70",
         "type": "leaf",
         "state": {
-          "type": "kanban",
+          "type": "markdown",
           "state": {
-            "file": "Kanban.md"
+            "file": "IDE Setup.md",
+            "mode": "source",
+            "source": false
           }
         }
       }
@@ -67,7 +69,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Kanban.md",
+                "file": "IDE Setup.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -86,6 +88,8 @@
   },
   "active": "e2e1fb15a9dd2a70",
   "lastOpenFiles": [
+    "IDE Setup.md",
+    "Pasted image 20220419232028.png.md",
     "Kanban.md",
     "TimeTracker.md"
   ]
