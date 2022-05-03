@@ -1,0 +1,52 @@
+@startuml WiapMR_BasicStructure
+
+
+
+PlaceableObject - SnapPoint
+
+enum Direction{ 
+    UP
+    DOWN
+    LEFT
+    RIGHT
+    UP_LEFT
+    UP_RIGHT
+    DOWN_LEFT
+    DOWN_RIGHT
+ }
+ note left: "Extend this enum to\n add more directions"
+
+class PlaceableObject{
+    boolean isSnapping;
+    SnapPoint snappedTo;
+
+    void snapTo(SnapPoint snapPoint);
+}
+Direction "1" - SnapPointConnection
+
+class SnapPointConnection{
+    SnapPoint connectedTo;
+    Direction direction;
+}
+
+SnapPointConnection "0.." - "1" SnapPoint
+
+class SnapPoint {
+    List<SnapPoint> connectedSnapPoints;
+    List<SnapPointConnection> connections;
+    PlaceableObject placeableObject;
+    GameBoard gameBoard;
+
+    
+}
+
+SnapPoint "0.." - GameBoard
+
+abstract class GameBoard{
+    //Gamelogic
+    List<SnapPoint> snapPoints;
+    List<SnapPoint> getSnapPoints();
+}
+
+
+@enduml
