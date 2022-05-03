@@ -1,0 +1,99 @@
+{
+  "main": {
+    "id": "c8595504716e59a7",
+    "type": "split",
+    "children": [
+      {
+        "id": "e2e1fb15a9dd2a70",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Sound.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b518ed2ad6f2e63f",
+    "type": "split",
+    "children": [
+      {
+        "id": "19a6fd1e3e9c92fa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ea66f4542bec53c0",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "ca03d594b83bfc1a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ec52e3e2a0c770a9",
+    "type": "split",
+    "children": [
+      {
+        "id": "5eae81e99a184e4f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "10b0419a4c966d49",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Sound.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "active": "e2e1fb15a9dd2a70",
+  "lastOpenFiles": [
+    "Sound.md",
+    "Excalidraw/Drawing 2022-04-30 03.56.06.excalidraw.md",
+    "Unity play mode on Hololens.md",
+    "IDE Setup.md",
+    "Kanban.md",
+    "Pasted image 20220419232028.png.md",
+    "TimeTracker.md"
+  ]
+}

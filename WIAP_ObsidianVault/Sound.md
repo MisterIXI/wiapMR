@@ -1,0 +1,1 @@
+When using sound a plugin like the "spatialaudio-unity" from microsoft is needed: [microsoft/spatialaudio-unity](https://github.com/microsoft/spatialaudio-unity)
