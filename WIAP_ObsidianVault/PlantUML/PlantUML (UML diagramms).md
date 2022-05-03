@@ -7,6 +7,6 @@ To edit PlantUML diagramms you have to use VSCode and have the [plantuml extensi
 **Export:** `Right Click -> Export Current Diagramm`
 
 
-In VSCode change the Plantuml settings for exporting at the same point as the source file:
+In VSCode change the Plantuml settings (vscode "settings" and search for "plantuml") for exporting at the same point as the source file:
 
 ![](attachments/Pasted%20image%2020220503224649.png)
