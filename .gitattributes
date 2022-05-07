@@ -1,2 +1,5 @@
 # Obsidian config line endings
 .obsidian/** eol=lf
+
+# Should disable any autocrlf conversion of git (so that no random configs keep getting flagged by git)
+* -text
