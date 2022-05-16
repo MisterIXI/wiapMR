@@ -12,6 +12,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         public void OnInputDown(InputEventData eventData)
         {
             photonView.RequestOwnership();
+            Debug.Log("Requested ownership");
         }
 
         public void OnInputUp(InputEventData eventData)
@@ -21,6 +22,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
         {
             targetView.TransferOwnership(requestingPlayer);
+            Debug.Log("Ownership requested to " + requestingPlayer.NickName);
         }
 
         public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
@@ -33,12 +35,21 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private void TransferControl(Player idPlayer)
         {
-            if (photonView.IsMine) photonView.TransferOwnership(idPlayer);
+            if (photonView.IsMine)
+            {
+                photonView.TransferOwnership(idPlayer);
+                Debug.Log("Ownership transferred to " + idPlayer.NickName);
+            }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (photonView != null) photonView.RequestOwnership();
+            if (photonView != null)
+            {
+                photonView.RequestOwnership();
+                Debug.Log("Requested ownership on trigger enter");
+            }
+
         }
 
         private void OnTriggerExit(Collider other)
