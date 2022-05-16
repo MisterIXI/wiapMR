@@ -4,5 +4,6 @@
   "useMarkdownLinks": true,
   "newLinkFormat": "relative",
   "trashOption": "none",
-  "attachmentFolderPath": "./attachments"
+  "attachmentFolderPath": "./attachments",
+  "promptDelete": false
 }
