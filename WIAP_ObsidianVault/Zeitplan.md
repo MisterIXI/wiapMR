@@ -1,0 +1,28 @@
+- Photon Perfomance boost (kein Ruckeln mehr)
+- Objectownership erfolgreich übergeben damit beide Parteien die gleichen Spielsteine bewegen können
+- Spieleframework
+    - Proof of Concept
+    - Erstes Spiel kreieren
+    - Unterstützung für Spielerstellung 
+- Spielbrett logik
+    - Snapping von Spielsteinen auf SnapPoints
+    - Anordnung von Snappoints auf Spielfeld model
+- Spielbrett als "Anker" für Spielerpositionen und Spielsteinpositionen
+- Rendern des anderen Spielers
+    - Kopf (minimum)
+    - Hände
+- UI QoL Features
+    - Holographische Preview von SnapPoint Snapping
+    - Spielsteine Spawner objekte
+    - Highlighting von möglichen Spielzügen (Spieleabhängig)
+- Laden von custom 3D Models
+    - Spielsteine
+    - Spielbrett
+    - Kartensets
+    - (Avatar)
+- Spatial Anchor für Spielfeld (snapping auf Tisch)
+- Unterstützung von >2 Spielern
+- Spieleditor zum erstellen neuer spiele
+- Kartenspiel unterstützung 
+    - Deck mischen
+    - Verdeckte Handkarten
