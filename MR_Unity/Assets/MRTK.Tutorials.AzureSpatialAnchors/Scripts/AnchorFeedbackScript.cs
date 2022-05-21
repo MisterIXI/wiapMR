@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#if UNITY_WSA
+
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -79,3 +81,4 @@ public class AnchorFeedbackScript : MonoBehaviour
         feedbackText.text = "Azure anchor located";
     }
 }
+#endif
