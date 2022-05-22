@@ -65,7 +65,6 @@ public class PUN_Tutorial_Controller : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        //TODO: Simplify this
         if (collision.gameObject.tag == "Player" && this.GetComponent<PhotonView>().IsMine)
         {
             //Check if the collided object is owned by another player
