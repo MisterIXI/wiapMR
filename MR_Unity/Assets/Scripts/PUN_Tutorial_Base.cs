@@ -17,13 +17,12 @@ public class PUN_Tutorial_Base : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire3"))
+        if (Input.GetButtonDown("Fire3"))
         {
-            if(!isSpawned)
+            if (!isSpawned && PhotonNetwork.IsConnectedAndReady)
             {
-                
-                PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 5, 0), Quaternion.identity);
-                //isSpawned = true;
+                GameObject newInstance = PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 5, 0), Quaternion.identity);
+                this.GetComponent<PUN_Tutorial_Ownership>().spawnColor(newInstance);
             }
         }
     }

@@ -20,8 +20,11 @@ public class PUN_Tutorial_Kill : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("Player has been killed");
-            PhotonNetwork.Destroy(collision.gameObject);
+            if (collision.gameObject.GetComponent<PhotonView>().IsMine)
+            {
+                Debug.Log("Player has been killed");
+                PhotonNetwork.Destroy(collision.gameObject);
+            }
         }
     }
 }
