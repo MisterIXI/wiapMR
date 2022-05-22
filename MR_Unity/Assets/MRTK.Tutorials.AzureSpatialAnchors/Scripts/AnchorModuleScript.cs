@@ -1,3 +1,4 @@
+#if UNITY_WSA
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -486,3 +487,4 @@ public class AnchorModuleScript : MonoBehaviour
     public event DeleteASAAnchorDelegate OnDeleteASAAnchor;
     #endregion
 }
+#endif
