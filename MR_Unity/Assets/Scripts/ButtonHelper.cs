@@ -13,7 +13,9 @@ public class ButtonHelper : MonoBehaviour
     public TMPro.TextMeshPro gravitySliderLabel;
 
     private List<GameObject> cubeList;
+
     private GameObject floor;
+    PhotonView photonView;
     [HideInInspector] public GameObject FarCubeInstance;
     [HideInInspector] public GameObject NearCubeInstance;
 
@@ -24,36 +26,53 @@ public class ButtonHelper : MonoBehaviour
         startPos = this.transform.position;
         Physics.gravity = new Vector3(0, -1f, 0);
         cubeList = new List<GameObject>();
+        photonView = GetComponent<PhotonView>();
     }
 
-    public void gravityUpdate(SliderEventData eventData)
+    public void GravityUpdate(SliderEventData eventData)
     {
+        photonView.RPC("UpdateSlider", RpcTarget.Others, eventData.NewValue);
         float gravity = eventData.NewValue * 5;
         Physics.gravity = new Vector3(0, -gravity, 0);
         gravitySliderLabel.text = "Gravity: " + gravity;
     }
 
-    public void toggleGravity()
+    [PunRPC]
+    public void UpdateSlider(float value)
     {
+        GameObject.Find("Gravity_Slider").GetComponent<PinchSlider>().SliderValue = value;
+    }
+
+    public void ToggleGravity()
+    {
+        //call static toggleGravity function on a random cube (Can't call it in a "real" static way due to RPC)
         if (cubeList.Count > 0)
         {
-            foreach (GameObject cube in cubeList)
-            {
-                cube.GetComponent<Rigidbody>().isKinematic = !cube.GetComponent<Rigidbody>().isKinematic;
-                cube.GetComponent<Rigidbody>().useGravity = !cube.GetComponent<Rigidbody>().useGravity;
-            }
+            cubeList[0].GetComponent<PhotonView>().RPC("ToggleGravity", RpcTarget.All);
+        }
+        //update gravity in all cubes
+        foreach (GameObject cube in cubeList)
+        {
+            cube.GetComponent<PhotonView>().RPC("UpdateGravity", RpcTarget.All);
         }
     }
 
-    public void resetPosition()
+    public void ResetTransform()
     {
-        if (cubeList.Count > 0)
+        //Build temporary list of owned cubes
+        List<GameObject> myCubes = new List<GameObject>();
+        foreach (GameObject cube in cubeList)
         {
-            foreach (GameObject cube in cubeList)
+            if (cube.GetComponent<PhotonView>().IsMine)
             {
-                cube.transform.position = startPos;
-                cube.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                myCubes.Add(cube);
             }
+        }
+        //Reset all owned cubes
+        Transform baseTransform = Camera.main.transform;
+        for (int i = 0; i < myCubes.Count; i++)
+        {
+            myCubes[i].GetComponent<CubeController>().ResetTransform(i + 1, myCubes.Count, baseTransform);
         }
     }
 
@@ -70,14 +89,16 @@ public class ButtonHelper : MonoBehaviour
 
     public void toggleFloor()
     {
-        if(floor == null)
+        if (floor == null)
         {
-           floor = PhotonNetwork.Instantiate(spawnableFloor.name, new Vector3(0, -1, 0), Quaternion.identity);
+            floor = PhotonNetwork.Instantiate(spawnableFloor.name, new Vector3(0, -1, 0), Quaternion.identity);
         }
-        else{
+        else
+        {
             PhotonNetwork.Destroy(floor);
         }
     }
+
     public void spawnCube()
     {
         GameObject parent = this.transform.parent.gameObject;
