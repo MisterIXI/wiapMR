@@ -24,6 +24,7 @@ namespace WiapMR.PUN
         public override void OnJoinedRoom()
         {
             Debug.Log("Joined Room");
+            GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
             //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
         }
 

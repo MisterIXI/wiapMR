@@ -13,7 +13,10 @@ namespace WiapMR.PUN
         public GameObject spawnableFloor;
         public float spawnDistance;
         public TMPro.TextMeshPro gravitySliderLabel;
+        private GameObject gravitySlider;
 
+        public GameObject buttonCollection;
+        public GameObject connectingText;
         private List<GameObject> cubeList;
 
         private GameObject floor;
@@ -28,12 +31,27 @@ namespace WiapMR.PUN
             startPos = this.transform.position;
             Physics.gravity = new Vector3(0, -1f, 0);
             cubeList = new List<GameObject>();
-            photonView = GetComponent<PhotonView>();
+            photonView = gameObject.GetComponent<PhotonView>();
+
+            gravitySlider = GameObject.Find("Gravity_Slider");
+        }
+
+        public void EnableButtons()
+        {
+            buttonCollection.SetActive(true);
+            connectingText.SetActive(false);
         }
 
         public void GravityUpdate(SliderEventData eventData)
         {
-            photonView.RPC("UpdateSlider", RpcTarget.Others, eventData.NewValue);
+            photonView = GameObject.Find("MP_Controller").GetComponent<PhotonView>();
+            Debug.Log("Components: ");
+            foreach (Component c in GameObject.Find("MP_Controller").GetComponents(typeof(Component)))
+            {
+                Debug.Log("Component: " + c.GetType().Name);
+
+            }
+            Debug.Log("PhotonView: " + photonView + " EventData: " + eventData.NewValue + " GravityUpdate" + "Connected: " + PhotonNetwork.IsConnected); photonView.RPC("UpdateSlider", RpcTarget.Others, eventData.NewValue);
             float gravity = eventData.NewValue * 5;
             Physics.gravity = new Vector3(0, -gravity, 0);
             gravitySliderLabel.text = "Gravity: " + gravity;
@@ -42,19 +60,15 @@ namespace WiapMR.PUN
         [PunRPC]
         public void UpdateSlider(float value)
         {
-            GameObject.Find("Gravity_Slider").GetComponent<PinchSlider>().SliderValue = value;
+            gravitySlider.GetComponentInChildren<PinchSlider>().SliderValue = value;
         }
 
         public void ToggleGravity()
         {
-            //call static toggleGravity function on a random cube (Can't call it in a "real" static way due to RPC)
-            if (cubeList.Count > 0)
-            {
-                cubeList[0].GetComponent<PhotonView>().RPC("ToggleGravity", RpcTarget.All);
-            }
-            //update gravity in all cubes
+            //call ToggleGravity on all cubes and then update gravity on all cubes
             foreach (GameObject cube in cubeList)
             {
+                cube.GetComponent<PhotonView>().RPC("ToggleGravity", RpcTarget.All);
                 cube.GetComponent<PhotonView>().RPC("UpdateGravity", RpcTarget.All);
             }
         }
@@ -103,10 +117,30 @@ namespace WiapMR.PUN
 
         public void spawnCube()
         {
-            GameObject parent = this.transform.parent.gameObject;
-            var cube = PhotonNetwork.Instantiate(spawnableCube.name, parent.transform.position + parent.transform.forward * spawnDistance, Quaternion.identity, 0);
+            Transform basePos = Camera.main.transform;
+            var cube = PhotonNetwork.Instantiate(spawnableCube.name, basePos.position + basePos.forward * spawnDistance, basePos.rotation, 0);
+            cube.GetComponent<Renderer>().material.color = Color.gray;
+            Debug.Log("Before adding to list" + cubeList.Count);
             cubeList.Add(cube);
+            Debug.Log("After adding to list" + cubeList.Count);
         }
 
+        public void DestroyCubes()
+        {
+            Debug.Log("DestroyCubes called...");
+            Debug.Log("CubeList: " + cubeList.Count);
+            //Iterate reverse since some cubes will be destroyed which changes the list
+            for (int i = cubeList.Count - 1; i >= 0; i--)
+            {
+                Debug.Log("Destroying cube: " + cubeList[i]);
+                if (cubeList[i].GetComponent<PhotonView>().IsMine)
+                {
+                    Debug.Log("Actually destroying...");
+
+                    PhotonNetwork.Destroy(cubeList[i]);
+                    cubeList.Remove(cubeList[i]);
+                }
+            }
+        }
     }
 }

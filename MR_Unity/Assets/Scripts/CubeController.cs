@@ -9,7 +9,7 @@ namespace WiapMR.PUN
     {
         PhotonView pv;
         Rigidbody rb;
-        static bool gravityEnabled;
+        bool gravityEnabled;
         private GameObject floor;
 
         void Start()
@@ -19,7 +19,7 @@ namespace WiapMR.PUN
 
         }
         [PunRPC]
-        public static void ToggleGravity()
+        public void ToggleGravity()
         {
             gravityEnabled = !gravityEnabled;
         }
@@ -52,8 +52,8 @@ namespace WiapMR.PUN
             //ownership should be already checked earlier, but as a security this is done again
             if (pv.IsMine)
             {
-                transform.position = basePosition.position + basePosition.forward * 5 - basePosition.right * 1.3f * (totalCount / 2 - position);
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.position = basePosition.position + basePosition.forward * 1 - basePosition.right * 0.5f * (totalCount / 2 - position);
+                transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 transform.rotation = basePosition.rotation;
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
