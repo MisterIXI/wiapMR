@@ -4,25 +4,28 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PUN_Controller : MonoBehaviourPunCallbacks
+namespace WiapMR.PUN
 {
-    void Start()
+    public class PUN_Controller : MonoBehaviourPunCallbacks
     {
-        PhotonNetwork.ConnectUsingSettings();
-        //PhotonNetwork.SendRate = 60; // 60 updates per second; default is 20
-    }
+        void Start()
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            //PhotonNetwork.SendRate = 60; // 60 updates per second; default is 20
+        }
 
-    public override void OnConnectedToMaster()
-    {
-        //Always connect to the same room
-        Debug.Log("Connected to Master");
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 4 }, null);
-    }
+        public override void OnConnectedToMaster()
+        {
+            //Always connect to the same room
+            Debug.Log("Connected to Master");
+            PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 4 }, null);
+        }
 
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("Joined Room");
-        //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
-    }
+        public override void OnJoinedRoom()
+        {
+            Debug.Log("Joined Room");
+            //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
+        }
 
+    }
 }
