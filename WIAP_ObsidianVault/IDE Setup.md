@@ -42,3 +42,8 @@ In Project Configurator:
 ![](attachments/Pasted%20image%2020220420002022.png)
 - Portal adress (ip changes; check wifi properties for IP of Hololens in current network)
 - Username: mengel-th-bingen
+
+
+You must also set login data for the Device Portal. For that see the bottom of Settings -> Developer of the hololens.
+And check the https:// link with an IP. There you have to "request Pin" which lets you type a displayed number to set Name and Password of the device Portal. 
+These Credentials are those you have to input into the unity window shown above.
