@@ -4,6 +4,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.MixedReality.Toolkit.UI;
+using Microsoft.MixedReality.Toolkit.Utilities;
 
 namespace WiapMR.PUN
 {
@@ -122,6 +123,9 @@ namespace WiapMR.PUN
             cube.GetComponent<Renderer>().material.color = Color.gray;
             Debug.Log("Before adding to list" + cubeList.Count);
             cubeList.Add(cube);
+            //logical AND on both ManipulationHandFlagTypes
+            // cube.GetComponent<ObjectManipulator>().ManipulationType = ManipulationHandFlags.OneHanded | ManipulationHandFlags.TwoHanded;
+            cube.GetComponent<ObjectManipulator>().enabled = true;
             Debug.Log("After adding to list" + cubeList.Count);
         }
 

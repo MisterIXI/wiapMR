@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Microsoft.MixedReality.Toolkit.Input;
+using Photon.Realtime;
 
 namespace WiapMR.PUN
 {
-    public class CubeController : MonoBehaviour
+    [RequireComponent(typeof(PhotonView))]
+    public class CubeController : MonoBehaviourPun, IMixedRealityInputHandler
     {
+        public bool isGrabbing { get; private set; } = false;
         PhotonView pv;
         Rigidbody rb;
         bool gravityEnabled;
@@ -58,6 +62,26 @@ namespace WiapMR.PUN
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
         }
+        public void OnInputDown(InputEventData eventData)
+        {
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+                Debug.Log("Requested ownership");
+            }
+            else
+            {
+                isGrabbing = true;
+            }
+        }
+        public void OnInputUp(InputEventData eventData)
+        {
+            if(photonView.IsMine)
+            {
+                isGrabbing = false;
+            }
+        }
+
 
     }
 }
