@@ -1,0 +1,3 @@
+[Frequently Asked Questions | Photon Engine](https://doc.photonengine.com/en-us/chat/current/troubleshooting/faq#what_is_the_difference_between_photon_realtime_and_pun_)
+This is a good reference on what product should be used.
+Since PUN is listed under legacy, we thought about changing the networking framework, but since PUN2 is apparently better suited for Unity and has mainly be replaced for better cross compatibility we will still use PUN2 for this project.
