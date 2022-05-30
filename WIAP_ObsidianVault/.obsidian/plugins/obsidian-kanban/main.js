@@ -132,3 +132,4 @@ PERFORMANCE OF THIS SOFTWARE.
 * Copyright (c) 2014–2018, Julian Kühnel
 * Released under the MIT license https://git.io/vwTVl
 *****************************************************/
+
