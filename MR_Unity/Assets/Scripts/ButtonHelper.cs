@@ -45,14 +45,7 @@ namespace WiapMR.PUN
 
         public void GravityUpdate(SliderEventData eventData)
         {
-            photonView = GameObject.Find("MP_Controller").GetComponent<PhotonView>();
-            Debug.Log("Components: ");
-            foreach (Component c in GameObject.Find("MP_Controller").GetComponents(typeof(Component)))
-            {
-                Debug.Log("Component: " + c.GetType().Name);
-
-            }
-            Debug.Log("PhotonView: " + photonView + " EventData: " + eventData.NewValue + " GravityUpdate" + "Connected: " + PhotonNetwork.IsConnected); photonView.RPC("UpdateSlider", RpcTarget.Others, eventData.NewValue);
+            photonView.RPC("UpdateSlider", RpcTarget.Others, eventData.NewValue);
             float gravity = eventData.NewValue * 5;
             Physics.gravity = new Vector3(0, -gravity, 0);
             gravitySliderLabel.text = "Gravity: " + gravity;
