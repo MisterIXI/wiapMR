@@ -3,3 +3,9 @@
 
 # Should disable any autocrlf conversion of git (so that no random configs keep getting flagged by git)
 * -text
+
+#tag js libraries to exclude from git repo stats
+.obsidian/* linguist-vendored
+
+#tag generated files
+WIAP_ObsidianVault/Excalidraw/* linguist-generated
