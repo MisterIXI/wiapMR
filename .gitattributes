@@ -5,7 +5,7 @@
 * -text
 
 #tag js libraries to exclude from git repo stats
-.obsidian/* linguist-vendored
+.obsidian/** linguist-vendored
 
 #tag generated files
 WIAP_ObsidianVault/Excalidraw/* linguist-generated
