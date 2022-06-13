@@ -4,21 +4,20 @@ using Microsoft.MixedReality.Toolkit.Input;
 
 public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 {
-    private bool isSnapping;
+    private GameObject board;
+    private Collider ownCollider;
     private SnapPoint snappedTo;
-    private bool isGrabbed;
     public void SnapTo(SnapPoint snapPoint)
     {
-        this.snappedTo = snapPoint;
-        this.isSnapping = true;
+        snappedTo = snapPoint;
         this.transform.SetParent(snapPoint.transform);
     }
 
     public void UnSnap()
     {
         this.snappedTo = null;
-        this.isSnapping = false;
-        this.transform.parent = null;
+        this.transform.SetParent(board.transform);
+
     }
 
     public void OnCollisionStay(Collision collision)
@@ -37,24 +36,25 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 
     public bool IsSnapped()
     {
-        return this.isSnapping;
+        return snappedTo != null;
     }
 
     public void OnInputDown(InputEventData eventData)
     {
-        this.isGrabbed = true;
-        if (IsSnapped()) {
+        if (IsSnapped())
+        {
             this.UnSnap();
         }
     }
     public void OnInputUp(InputEventData eventData)
     {
-        this.isGrabbed = false;
+        if(GetComponent<)
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        
         this.isSnapping = false;
         this.snappedTo = null;
         this.isGrabbed = false;
@@ -63,9 +63,9 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     // Update is called once per frame
     void Update()
     {
-        if (IsSnapped())
-        {
-            transform.position = this.transform.parent.transform.position;
-        }
+        // if (IsSnapped())
+        // {
+        //     transform.position = this.transform.parent.transform.position;
+        // }
     }
 }
