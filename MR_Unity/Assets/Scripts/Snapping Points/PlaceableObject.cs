@@ -7,29 +7,25 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     private GameObject board;
     private Collider ownCollider;
     private SnapPoint snappedTo;
-    public void SnapTo(SnapPoint snapPoint)
-    {
-        snappedTo = snapPoint;
-        this.transform.SetParent(snapPoint.transform);
-    }
+    private SnapPoint potentialSnapPoint;
 
-    public void UnSnap()
-    {
-        this.snappedTo = null;
-        this.transform.SetParent(board.transform);
 
-    }
 
-    public void OnCollisionStay(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
-        GameObject obj = collision.gameObject;
-        if (obj.tag.Equals("Snappoint"))
+        if (collision.gameObject.tag == "SnapPoint")
         {
-            Debug.Log("Collision with Snappoint");
-            if (!isGrabbed)
+            potentialSnapPoint = collision.gameObject.GetComponent<SnapPoint>();
+        }
+    }
+
+    public void OnCollisionLeave(Collision collision)
+    {
+        if (collision.gameObject.tag == "SnapPoint")
+        {
+            if (potentialSnapPoint == collision.gameObject.GetComponent<SnapPoint>())
             {
-                Debug.Log("Snapping now.");
-                this.SnapTo(obj.GetComponent<SnapPoint>());
+                potentialSnapPoint = null;
             }
         }
     }
@@ -43,21 +39,36 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
         if (IsSnapped())
         {
-            this.UnSnap();
+            photonView.RPC("Unsnap", RpcTarget.All);
         }
     }
     public void OnInputUp(InputEventData eventData)
     {
-        if(GetComponent<)
+        if (snappedTo == null && potentialSnapPoint != null)
+        {
+            photonView.RPC("SnapTo", RpcTarget.All, potentialSnapPoint);
+        }
+    }
+
+    [PunRPC]
+    public void UnSnap()
+    {
+        this.snappedTo = null;
+        this.transform.SetParent(board.transform);
+
+    }
+    
+    [PunRPC]
+    public void SnapTo(SnapPoint snapPoint)
+    {
+        snappedTo = snapPoint;
+        this.transform.SetParent(snapPoint.transform);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        this.isSnapping = false;
         this.snappedTo = null;
-        this.isGrabbed = false;
     }
 
     // Update is called once per frame
