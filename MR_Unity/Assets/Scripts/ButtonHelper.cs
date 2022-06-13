@@ -11,6 +11,8 @@ namespace WiapMR.PUN
     public class ButtonHelper : MonoBehaviour
     {
         public GameObject spawnableCube;
+        public GameObject spawnableSphere;
+        public GameObject spawnableBoard;
         public GameObject spawnableFloor;
         public float spawnDistance;
         public TMPro.TextMeshPro gravitySliderLabel;
@@ -24,6 +26,7 @@ namespace WiapMR.PUN
         PhotonView photonView;
         [HideInInspector] public GameObject FarCubeInstance;
         [HideInInspector] public GameObject NearCubeInstance;
+        private GameObject gameboard;
 
         private Vector3 startPos;
         // Start is called before the first frame update
@@ -33,7 +36,6 @@ namespace WiapMR.PUN
             Physics.gravity = new Vector3(0, -1f, 0);
             cubeList = new List<GameObject>();
             photonView = gameObject.GetComponent<PhotonView>();
-
             gravitySlider = GameObject.Find("Gravity_Slider");
         }
 
@@ -111,15 +113,28 @@ namespace WiapMR.PUN
 
         public void spawnCube()
         {
+            SpawnEntity(spawnableCube);
+        }
+
+        public void SpawnEntity(GameObject objectToSpawn)
+        {
+
             Transform basePos = Camera.main.transform;
-            var cube = PhotonNetwork.Instantiate(spawnableCube.name, basePos.position + basePos.forward * spawnDistance, basePos.rotation, 0);
-            cube.GetComponent<Renderer>().material.color = Color.gray;
+            var entity = PhotonNetwork.Instantiate(objectToSpawn.name, basePos.position + basePos.forward * spawnDistance, basePos.rotation, 0);
+            entity.GetComponent<Renderer>().material.color = Color.gray;
             Debug.Log("Before adding to list" + cubeList.Count);
-            cubeList.Add(cube);
+            cubeList.Add(entity);
             //logical AND on both ManipulationHandFlagTypes
             // cube.GetComponent<ObjectManipulator>().ManipulationType = ManipulationHandFlags.OneHanded | ManipulationHandFlags.TwoHanded;
-            cube.GetComponent<ObjectManipulator>().enabled = true;
-            Debug.Log("After adding to list" + cubeList.Count);
+            entity.GetComponent<ObjectManipulator>().enabled = true;
+            Debug.Log("pv: " + photonView + "cubeID: " + entity.GetPhotonView().ViewID);
+            photonView.RPC("setCubeParent", RpcTarget.All, entity.GetPhotonView().ViewID, gameboard.GetPhotonView().ViewID);
+        }
+
+        [PunRPC]
+        public void setCubeParent(int cubeID, int parentID)
+        {
+            PhotonView.Find(cubeID).transform.SetParent(PhotonView.Find(parentID).transform);
         }
 
         public void DestroyCubes()
@@ -137,6 +152,23 @@ namespace WiapMR.PUN
                     PhotonNetwork.Destroy(cubeList[i]);
                     cubeList.Remove(cubeList[i]);
                 }
+            }
+        }
+
+        public void spawnSphere()
+        {
+            SpawnEntity(spawnableSphere);
+        }
+
+        public void SpawnGameBoard()
+        {
+            if (gameboard == null)
+            {
+                gameboard = PhotonNetwork.Instantiate(spawnableBoard.name, new Vector3(0, -1, 0), Quaternion.identity);
+            }
+            else
+            {
+                PhotonNetwork.Destroy(gameboard);
             }
         }
     }

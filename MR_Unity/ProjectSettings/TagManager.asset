@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cube
   - SnapPoint
+  - Bullet
+  - GameBoard
   layers:
   - Default
   - TransparentFX

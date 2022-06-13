@@ -6,29 +6,32 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 {
     private GameObject board;
     private Collider ownCollider;
-    private SnapPoint snappedTo;
+    private bool snapped;
     private SnapPoint potentialSnapPoint;
 
 
 
-    public void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.tag == "SnapPoint")
+        Debug.Log("Collision with SnapPoint (Enter)");
+        if (collider.gameObject.tag == "SnapPoint")
         {
-            if (potentialSnapPoint == null)
+            if (potentialSnapPoint != null)
             {
                 potentialSnapPoint.UnhighlightHologram();
             }
-            potentialSnapPoint = collision.gameObject.GetComponent<SnapPoint>();
+            potentialSnapPoint = collider.gameObject.GetComponent<SnapPoint>();
             potentialSnapPoint.HighlightHologram();
         }
     }
 
-    public void OnCollisionLeave(Collision collision)
+
+    void OnTriggerExit(Collider collider)
     {
-        if (collision.gameObject.tag == "SnapPoint")
+        Debug.Log("Collision with SnapPoint (Leave)");
+        if (collider.gameObject.tag == "SnapPoint")
         {
-            if (potentialSnapPoint == collision.gameObject.GetComponent<SnapPoint>())
+            if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
             {
                 potentialSnapPoint.UnhighlightHologram();
                 potentialSnapPoint = null;
@@ -38,22 +41,23 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 
     public bool IsSnapped()
     {
-        return snappedTo != null;
+        return snapped;
     }
 
     public void OnInputDown(InputEventData eventData)
     {
         if (IsSnapped())
         {
-            photonView.RPC("Unsnap", RpcTarget.All);
+            photonView.RPC("UnSnap", RpcTarget.All);
         }
         SnapPoint.HolographicPreviewAll(gameObject);
     }
     public void OnInputUp(InputEventData eventData)
     {
-        if (snappedTo == null && potentialSnapPoint != null)
+        if (!snapped && potentialSnapPoint != null)
         {
-            photonView.RPC("SnapTo", RpcTarget.All, potentialSnapPoint);
+            photonView.RPC("SnapTo", RpcTarget.All);
+            transform.position = potentialSnapPoint.transform.position;
         }
         SnapPoint.StopHolographicPreviewAll();
     }
@@ -61,22 +65,22 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     [PunRPC]
     public void UnSnap()
     {
-        this.snappedTo = null;
-        this.transform.SetParent(board.transform);
+        this.snapped = false;
 
     }
 
     [PunRPC]
-    public void SnapTo(SnapPoint snapPoint)
+    public void SnapTo()
     {
-        snappedTo = snapPoint;
-        this.transform.SetParent(snapPoint.transform);
+        snapped = true;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        this.snappedTo = null;
+        this.snapped = false;
+        board = GameObject.FindGameObjectWithTag("GameBoard");
     }
 
     // Update is called once per frame

@@ -1,24 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Microsoft.MixedReality.Toolkit.UI;
+using Microsoft.MixedReality.Toolkit.Input;
 
-public abstract class GameBoard : MonoBehaviour
-{   
-    private List<SnapPoint> snapPoints;
 
-    public List<SnapPoint> GetSnapPoints() {
-        return snapPoints;
-    }
-
-    // Start is called before the first frame update
+public class GameBoard : MonoBehaviourPun, IMixedRealityInputHandler
+{
+    private bool isGrabbing = false;
+    PhotonView photonView;
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
+        if (photonView.IsMine)
+        {
+            GetComponent<ObjectManipulator>().enabled = true;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnInputDown(InputEventData eventData)
     {
-        
+        if(!photonView.IsMine)
+        {
+             photonView.RequestOwnership();
+        }
+    }
+
+    public void OnInputUp(InputEventData eventData)
+    {
+
     }
 }
