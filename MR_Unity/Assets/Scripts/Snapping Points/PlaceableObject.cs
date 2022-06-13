@@ -15,7 +15,12 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
         if (collision.gameObject.tag == "SnapPoint")
         {
+            if (potentialSnapPoint == null)
+            {
+                potentialSnapPoint.UnhighlightHologram();
+            }
             potentialSnapPoint = collision.gameObject.GetComponent<SnapPoint>();
+            potentialSnapPoint.HighlightHologram();
         }
     }
 
@@ -25,6 +30,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
         {
             if (potentialSnapPoint == collision.gameObject.GetComponent<SnapPoint>())
             {
+                potentialSnapPoint.UnhighlightHologram();
                 potentialSnapPoint = null;
             }
         }
@@ -41,6 +47,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
         {
             photonView.RPC("Unsnap", RpcTarget.All);
         }
+        SnapPoint.HolographicPreviewAll(gameObject);
     }
     public void OnInputUp(InputEventData eventData)
     {
@@ -48,6 +55,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
         {
             photonView.RPC("SnapTo", RpcTarget.All, potentialSnapPoint);
         }
+        SnapPoint.StopHolographicPreviewAll();
     }
 
     [PunRPC]
@@ -57,7 +65,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
         this.transform.SetParent(board.transform);
 
     }
-    
+
     [PunRPC]
     public void SnapTo(SnapPoint snapPoint)
     {
