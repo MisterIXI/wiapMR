@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cube
+  - SnapPoint
   - Bullet
+  - GameBoard
   layers:
   - Default
   - TransparentFX
