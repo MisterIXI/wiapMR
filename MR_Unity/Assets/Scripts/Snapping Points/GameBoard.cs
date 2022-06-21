@@ -9,10 +9,8 @@ using Microsoft.MixedReality.Toolkit.Input;
 public class GameBoard : MonoBehaviourPun, IMixedRealityInputHandler
 {
     private bool isGrabbing = false;
-    PhotonView photonView;
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         if (photonView.IsMine)
         {
             GetComponent<ObjectManipulator>().enabled = true;
