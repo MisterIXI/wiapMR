@@ -1,0 +1,24 @@
+{
+    "version": 1,
+    "name": "Go",
+    "height": 200,
+    "width": 200,
+    "texture": "Go.png",
+    "gamePieces":[
+        {
+            "name": "Go",
+            "path": "Go.fbx"
+        }
+    ],
+    "snapPoints": [],
+    "snapGrids":[
+        {
+            "startX":4.638,
+            "startZ":4.638,
+            "endX": 195.365,
+            "endZ": 195.365,
+            "countX": 19,
+            "countZ": 19
+        }
+    ]
+}
