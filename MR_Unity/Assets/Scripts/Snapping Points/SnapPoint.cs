@@ -18,7 +18,7 @@ public class SnapPoint : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         material = GetComponent<MeshRenderer>().material;
         snapPoints.Add(this);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
 
