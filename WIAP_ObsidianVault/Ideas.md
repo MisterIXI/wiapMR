@@ -9,3 +9,6 @@
 	- GameBoard: a base for all the snapping points and rendering of a gameboard
 	- SnapPoints: points you can place a game piece to disable wonky physics-related problems
 
+
+## GameImporter:
+Adjust Snapoint size automatically according to minimum distance to similar points.
