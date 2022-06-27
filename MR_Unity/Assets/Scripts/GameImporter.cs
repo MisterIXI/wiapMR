@@ -6,23 +6,25 @@ using System.Json;
 
 public class GameImporter : MonoBehaviour
 {
-    private string GAMEBOARD_PATH;
+    private string GAME_DATA_PATH;
     private const float GAMEBOARD_THICKNESS = 5f;
     public GameObject snapPointPrefab;
+    public GameObject gamePiecePrefab;
     public struct GameData
     {
         public string name;
         public int height;
         public int width;
         public string texture;
-        public string[] gamePieces;
+        public GamePiece[] gamePieces;
         public SnapPointStruct[] snapPoints;
         public SnapGrid[] snapGrids;
         [System.Serializable]
-        public struct GamePiece{
+        public struct GamePiece
+        {
             public string name;
             public string path;
-            // public Vector3 
+            public string color;
         }
         [System.Serializable]
         public struct SnapPointStruct
@@ -60,7 +62,7 @@ public class GameImporter : MonoBehaviour
         //         JsonUtility.FromJson<GameData>(File.ReadAllText(file));
         //     }
         // }
-        GAMEBOARD_PATH = Application.dataPath + "/Games/";
+        GAME_DATA_PATH = Application.dataPath + "/Games/";
         string path = Application.dataPath + "/Games/" + "go.json";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
         GameData? gameData = ImportGameData(path);
@@ -89,7 +91,7 @@ public class GameImporter : MonoBehaviour
         gameTexture.transform.parent = parentObject.transform;
         // create a new Texture and load the given texture from path
         Texture2D tex = new Texture2D(200, 200, TextureFormat.RGBA32, false);
-        tex.LoadImage(System.IO.File.ReadAllBytes(GAMEBOARD_PATH + gameData.texture));
+        tex.LoadImage(System.IO.File.ReadAllBytes(GAME_DATA_PATH + gameData.texture));
         // tex.filterMode = FilterMode.Point;
         // Debug.Log("Path:" + GAMEBOARD_PATH + gameData.texture + " | tex: " + tex);
         // set the shader to texture to avoid a blurry endresult
@@ -141,7 +143,25 @@ public class GameImporter : MonoBehaviour
                 }
             }
         }
-        
+
+        // loop through the gamepieces
+        for (int i = 0; i < gameData.gamePieces.Length; i++)
+        {
+            GameObject piece = Instantiate(gamePiecePrefab);
+            GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
+            Debug.Log("Path: " + gameData.gamePieces[i].path);
+            Debug.Log("Mesh: " + obj);
+            Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
+            Debug.Log("Path: " + gameData.gamePieces[i].path);
+
+            Debug.Log("Mesh: " + mesh);
+            piece.GetComponent<MeshFilter>().mesh = mesh;
+            piece.transform.position = new Vector3(10 + (i * 5), 10, 10);
+            piece.GetComponent<MeshRenderer>().material.color = ConvertColor(gameData.gamePieces[i].color);
+            piece.GetComponent<BoxCollider>().size = piece.GetComponent<MeshRenderer>().bounds.size;
+            // piece.transform.parent = parentObject.transform;
+        }
+
         parentObject.transform.localScale = Vector3.one * 0.1f;
     }
 
@@ -184,6 +204,17 @@ public class GameImporter : MonoBehaviour
                 result.snapGrids[i].countZ = 1;
         }
 
+        return result;
+    }
+
+    private Color ConvertColor(string color)
+    {
+        Color result = new Color();
+        string[] colorParts = color.Split(',');
+        result.r = float.Parse(colorParts[0]);
+        result.g = float.Parse(colorParts[1]);
+        result.b = float.Parse(colorParts[2]);
+        result.a = float.Parse(colorParts[3]);
         return result;
     }
 }

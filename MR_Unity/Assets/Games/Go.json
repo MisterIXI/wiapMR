@@ -6,8 +6,14 @@
     "texture": "Go.png",
     "gamePieces":[
         {
-            "name": "Go",
-            "path": "Go.fbx"
+            "name": "GoWhite",
+            "path": "GoStone",
+            "color": "255,255,255,0.5"
+        },
+        {
+            "name": "GoBlack",
+            "path": "GoStone",
+            "color": "0,0,0,1"
         }
     ],
     "snapPoints": [],

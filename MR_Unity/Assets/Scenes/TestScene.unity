@@ -331,6 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snapPointPrefab: {fileID: 790646109668074858, guid: ad864931e9c538f4e8203aa26d31b45e, type: 3}
+  gamePiecePrefab: {fileID: 8166055692710453082, guid: 9ffe82649f76421469e4a6b65eb4e422, type: 3}
 --- !u!4 &1833011695
 Transform:
   m_ObjectHideFlags: 0
