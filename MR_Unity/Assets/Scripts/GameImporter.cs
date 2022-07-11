@@ -25,6 +25,8 @@ public class GameImporter : MonoBehaviour
             public string name;
             public string path;
             public string color;
+            public float metallic;
+            public float smoothness;
         }
         [System.Serializable]
         public struct SnapPointStruct
@@ -65,16 +67,15 @@ public class GameImporter : MonoBehaviour
         GAME_DATA_PATH = Application.dataPath + "/Games/";
         string path = Application.dataPath + "/Games/" + "go.json";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
-        GameData? gameData = ImportGameData(path);
-        if (gameData.HasValue)
+        try
         {
-            // GameData import sucessfull
-            ImportGame(gameData.Value);
+            GameData gameData = ImportGameData(path);
+            ImportGame(gameData);
         }
-        else
+        catch(System.Exception e)
         {
-            // handle wrong game data
             Debug.Log("Game data invalid or not found!");
+            Debug.Log(e.Message);
         }
     }
 
@@ -153,13 +154,21 @@ public class GameImporter : MonoBehaviour
             Debug.Log("Mesh: " + obj);
             Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
             Debug.Log("Path: " + gameData.gamePieces[i].path);
-
             Debug.Log("Mesh: " + mesh);
             piece.GetComponent<MeshFilter>().mesh = mesh;
             piece.transform.position = new Vector3(10 + (i * 5), 10, 10);
-            piece.GetComponent<MeshRenderer>().material.color = ConvertColor(gameData.gamePieces[i].color);
+            Material currentMat = piece.GetComponent<MeshRenderer>().material;
+            currentMat.color = ConvertColor(gameData.gamePieces[i].color);
+            currentMat.SetFloat("_Metallic", gameData.gamePieces[i].metallic);
+            currentMat.SetFloat("_Glossiness", gameData.gamePieces[i].smoothness);
             piece.GetComponent<BoxCollider>().size = piece.GetComponent<MeshRenderer>().bounds.size;
-            // piece.transform.parent = parentObject.transform;
+            if(currentMat.color.a != 1){
+                currentMat.SetFloat("_Mode", 3);
+            }
+
+            // without this line the shader will only show the correct color until something changes
+            // with it, it seems to reload the variables and renders correctly
+            currentMat.shader = Shader.Find("Standard");
         }
 
         parentObject.transform.localScale = Vector3.one * 0.1f;
@@ -170,7 +179,7 @@ public class GameImporter : MonoBehaviour
     /// </summary>
     /// <param name="path">Path to json file (including file ending)</param>
     /// <returns>Imported GameData or null if non-optional fields were imported incorrectly</returns>
-    private GameData? ImportGameData(string path)
+    private GameData ImportGameData(string path)
     {
         GameData result = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
         // set default name
@@ -181,7 +190,7 @@ public class GameImporter : MonoBehaviour
         // return null when invalid height or width are set
         if (result.height <= 0 || result.width <= 0)
         {
-            return null;
+            throw new InvalidDataException("Height and width must be greater than 0");
         }
         // set empty arrays to "snapPoints" and "snapGrids" if they are not initialized
         if (result.snapPoints == null)
@@ -211,9 +220,9 @@ public class GameImporter : MonoBehaviour
     {
         Color result = new Color();
         string[] colorParts = color.Split(',');
-        result.r = float.Parse(colorParts[0]);
-        result.g = float.Parse(colorParts[1]);
-        result.b = float.Parse(colorParts[2]);
+        result.r = float.Parse(colorParts[0]) / 255;
+        result.g = float.Parse(colorParts[1]) / 255;
+        result.b = float.Parse(colorParts[2]) / 255;
         result.a = float.Parse(colorParts[3]);
         return result;
     }
