@@ -7,6 +7,7 @@ in GameImporter ist `ImportGame()` und `ImportGameData()` und wenn `ImportGameDa
 ### Möglichkeiten:
 1. GameData? -> Nullable Value
 2. Klassendatenelement und return boolean (-> klappt/klappt nicht)
-3. throw exception -> try/catch
+### 3. throw exception -> try/catch
+^beste möglichkeit
 4. boolean feld in GameData "Valid" -> "ist valide gameData?"
 5. Standardwerte für *alles* festlegen
