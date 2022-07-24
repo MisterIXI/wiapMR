@@ -7,14 +7,14 @@
     "gamePieces":[
         {
             "name": "GoWhite",
-            "path": "GoStone",
+            "path": "GoStone.obj",
             "color": "255,255,255,1",
             "metallic": "1",
             "smoothness": "0.5"
         },
         {
             "name": "GoBlack",
-            "path": "GoStone",
+            "path": "GoStone.obj",
             "color": "0,0,0,1",
             "metallic": "1",
             "smoothness": "0.5"

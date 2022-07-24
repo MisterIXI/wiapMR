@@ -65,12 +65,12 @@ public class GameImporter : MonoBehaviour
         //     }
         // }
         GAME_DATA_PATH = Application.dataPath + "/Games/";
-        string path = Application.dataPath + "/Games/" + "go.json";
+        string path = Application.dataPath + "/Games/Go/";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
         try
         {
-            GameData gameData = ImportGameData(path);
-            ImportGame(gameData);
+            GameData gameData = ImportGameData(path  + "Go.json");
+            ImportGame(path, gameData);
         }
         catch(System.Exception e)
         {
@@ -78,8 +78,7 @@ public class GameImporter : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
-
-    public void ImportGame(GameData gameData)
+    public void ImportGame(string gameDataPath, GameData gameData)
     {
         // Debug.Log(gameData.snapGrid.countX);
         GameObject parentObject = new GameObject("GameBoard");
@@ -92,7 +91,7 @@ public class GameImporter : MonoBehaviour
         gameTexture.transform.parent = parentObject.transform;
         // create a new Texture and load the given texture from path
         Texture2D tex = new Texture2D(200, 200, TextureFormat.RGBA32, false);
-        tex.LoadImage(System.IO.File.ReadAllBytes(GAME_DATA_PATH + gameData.texture));
+        tex.LoadImage(System.IO.File.ReadAllBytes(gameDataPath + gameData.texture));
         // tex.filterMode = FilterMode.Point;
         // Debug.Log("Path:" + GAMEBOARD_PATH + gameData.texture + " | tex: " + tex);
         // set the shader to texture to avoid a blurry endresult
@@ -144,18 +143,16 @@ public class GameImporter : MonoBehaviour
                 }
             }
         }
-
+        //set gameboard inactive to avoid snappoints colliding with gamepieces
+        parentObject.SetActive(false);
         // loop through the gamepieces
         for (int i = 0; i < gameData.gamePieces.Length; i++)
         {
             GameObject piece = Instantiate(gamePiecePrefab);
-            GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
-            Debug.Log("Path: " + gameData.gamePieces[i].path);
-            Debug.Log("Mesh: " + obj);
-            Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
-            Debug.Log("Path: " + gameData.gamePieces[i].path);
-            Debug.Log("Mesh: " + mesh);
-            piece.GetComponent<MeshFilter>().mesh = mesh;
+            // GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
+            // GameObject obj = new GameObject();
+            ObjectLoader loader = piece.AddComponent<ObjectLoader>();
+            loader.Load(gameDataPath, gameData.gamePieces[i].path);
             piece.transform.position = new Vector3(10 + (i * 5), 10, 10);
             Material currentMat = piece.GetComponent<MeshRenderer>().material;
             currentMat.color = ConvertColor(gameData.gamePieces[i].color);
@@ -172,6 +169,7 @@ public class GameImporter : MonoBehaviour
         }
 
         parentObject.transform.localScale = Vector3.one * 0.1f;
+        parentObject.SetActive(true);
     }
 
     /// <summary>
