@@ -2,54 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Json;
+using Photon.Pun;
+using System.Runtime.InteropServices;
+using System;
 
-public class GameImporter : MonoBehaviour
+
+public class GameImporter : MonoBehaviourPunCallbacks
 {
     private string GAME_DATA_PATH;
     private const float GAMEBOARD_THICKNESS = 5f;
+    private readonly Vector3 GAMEPIECE_START_SIZE = new Vector3(10f, 10f, 10f);
     public GameObject snapPointPrefab;
     public GameObject gamePiecePrefab;
-    public struct GameData
-    {
-        public string name;
-        public int height;
-        public int width;
-        public string texture;
-        public GamePiece[] gamePieces;
-        public SnapPointStruct[] snapPoints;
-        public SnapGrid[] snapGrids;
-        [System.Serializable]
-        public struct GamePiece
-        {
-            public string name;
-            public string path;
-            public string color;
-            public float metallic;
-            public float smoothness;
-        }
-        [System.Serializable]
-        public struct SnapPointStruct
-        {
-            public int posX;
-            public int posY;
-            public int posZ;
-        }
-        [System.Serializable]
-        public struct SnapGrid
-        {
-            public float startX;
-            public float startY;
-            public float startZ;
-            public float endX;
-            public float endY;
-            public float endZ;
-            public int countX;
-            public int countY;
-            public int countZ;
 
-        }
-    }
 
     void Start()
     {
@@ -64,25 +29,43 @@ public class GameImporter : MonoBehaviour
         //         JsonUtility.FromJson<GameData>(File.ReadAllText(file));
         //     }
         // }
+
+    }
+    public void DoStuff()
+    {
         GAME_DATA_PATH = Application.dataPath + "/Games/";
         string path = Application.dataPath + "/Games/Go/";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
         try
         {
-            GameData gameData = ImportGameData(path  + "Go.json");
-            ImportGame(path, gameData);
+            GameData gameData = ImportGameData(path + "Go.json");
+            StartCoroutine(TriggerGameImport(path, gameData));
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.Log("Game data invalid or not found!");
             Debug.Log(e.Message);
         }
     }
-    public void ImportGame(string gameDataPath, GameData gameData)
+    [PunRPC]
+    public void ImportGame(byte[] texData, string[] gpNames, string[][] gpData, byte[] serializedGD)
     {
         // Debug.Log(gameData.snapGrid.countX);
         GameObject parentObject = new GameObject("GameBoard");
+        GameData gameData = new GameData(serializedGD);
+        CreateGameBoard(gameData, parentObject, texData);
+        CreateGamePieces(gameData, parentObject, gpNames, gpData);
+        CreateSnapPoints(gameData, parentObject);
+        //set gameboard inactive to avoid snappoints colliding with gamepieces
+        parentObject.SetActive(false);
 
+
+        parentObject.transform.localScale = Vector3.one * 0.1f;
+        parentObject.SetActive(true);
+    }
+
+    private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
+    {
         // create Board texture
         GameObject gameTexture = GameObject.CreatePrimitive(PrimitiveType.Quad);
         gameTexture.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -90,13 +73,19 @@ public class GameImporter : MonoBehaviour
         gameTexture.transform.position = new Vector3(gameData.width / 2, 0.001f, gameData.height / 2);
         gameTexture.transform.parent = parentObject.transform;
         // create a new Texture and load the given texture from path
-        Texture2D tex = new Texture2D(200, 200, TextureFormat.RGBA32, false);
-        tex.LoadImage(System.IO.File.ReadAllBytes(gameDataPath + gameData.texture));
+        Texture2D tex = new Texture2D(gameData.width, gameData.height, TextureFormat.RGBA32, false);
+        //print texData
+
+
+        // tex.LoadRawTextureData(texData);
+        tex.LoadImage(texData);
+        tex.Apply();
+        Debug.Log(tex);
         // tex.filterMode = FilterMode.Point;
         // Debug.Log("Path:" + GAMEBOARD_PATH + gameData.texture + " | tex: " + tex);
         // set the shader to texture to avoid a blurry endresult
-        // gameTexture.GetComponent<Renderer>().material.shader = Shader.Find("Unlit/Texture");
         gameTexture.GetComponent<Renderer>().material.mainTexture = tex;
+        gameTexture.GetComponent<Renderer>().material.shader = Shader.Find("Unlit/Texture");
         // create board 3d Model
         GameObject game = GameObject.CreatePrimitive(PrimitiveType.Cube);
         game.name = "GameBoard_Cube";
@@ -106,7 +95,10 @@ public class GameImporter : MonoBehaviour
         game.transform.parent = parentObject.transform;
         // take color of texture at 0,0 to try and make it fit better
         game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
+    }
 
+    private void CreateSnapPoints(GameData gameData, GameObject parentObject)
+    {
         // loop through the custom snapoints
         GameObject tempObj;
         for (int i = 0; i < gameData.snapPoints.Length; i++)
@@ -143,34 +135,70 @@ public class GameImporter : MonoBehaviour
                 }
             }
         }
-        //set gameboard inactive to avoid snappoints colliding with gamepieces
-        parentObject.SetActive(false);
+    }
+
+    private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, string[][] gpData)
+    {
+        List<string> gpNamesList = new List<string>(gpNames);
+        GameObject[] result = new GameObject[gameData.gamePieces.Length];
         // loop through the gamepieces
         for (int i = 0; i < gameData.gamePieces.Length; i++)
         {
             GameObject piece = Instantiate(gamePiecePrefab);
+            piece.name = gameData.gamePieces[i].name;
+            string meshPath = gameData.gamePieces[i].path;
             // GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
             // GameObject obj = new GameObject();
             ObjectLoader loader = piece.AddComponent<ObjectLoader>();
-            loader.Load(gameDataPath, gameData.gamePieces[i].path);
-            piece.transform.position = new Vector3(10 + (i * 5), 10, 10);
+            loader.Load(gpData[gpNamesList.IndexOf(meshPath)]);
+            piece.transform.position = new Vector3(-10 - (i / 10 * 10), 0, i % 10 * 10);
             Material currentMat = piece.GetComponent<MeshRenderer>().material;
-            currentMat.color = ConvertColor(gameData.gamePieces[i].color);
+            currentMat.color = ImporterHelper.ConvertColor(gameData.gamePieces[i].color);
             currentMat.SetFloat("_Metallic", gameData.gamePieces[i].metallic);
             currentMat.SetFloat("_Glossiness", gameData.gamePieces[i].smoothness);
-            piece.GetComponent<BoxCollider>().size = piece.GetComponent<MeshRenderer>().bounds.size;
-            if(currentMat.color.a != 1){
+            Destroy(piece.GetComponent<BoxCollider>());
+            piece.AddComponent<BoxCollider>();
+            if (currentMat.color.a != 1)
+            {
                 currentMat.SetFloat("_Mode", 3);
             }
 
             // without this line the shader will only show the correct color until something changes
             // with it, it seems to reload the variables and renders correctly
             currentMat.shader = Shader.Find("Standard");
+            piece.transform.parent = parentObject.transform;
+            Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
+            ImporterHelper.ScaleUp(piece, GAMEPIECE_START_SIZE);
+            result[i] = piece;
         }
-
-        parentObject.transform.localScale = Vector3.one * 0.1f;
-        parentObject.SetActive(true);
+        return result;
     }
+
+    private IEnumerator TriggerGameImport(string gameDataPath, GameData gameData)
+    {
+        byte[] texArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.texture);
+        List<byte[]> meshList = new List<byte[]>();
+
+        GameObject tempObj = new GameObject();
+        tempObj.SetActive(false);
+        List<string> deduplicatedGamePieces = ImporterHelper.DeduplicateGamePieces(gameData);
+        string[][] gamePiecesData = new string[deduplicatedGamePieces.Count][];
+        for (int i = 0; i < deduplicatedGamePieces.Count; i++)
+        {
+            gamePiecesData[i] = System.IO.File.ReadAllLines(gameDataPath + deduplicatedGamePieces[i]);
+            // ObjectLoader loader = tempObj.AddComponent<ObjectLoader>();
+            // loader.Load(gameDataPath, deduplicatedGamePieces[i]);
+            // while (!loader.isLoaded)
+            // {
+            //     //sleep for 100ms
+            //     yield return new WaitForSeconds(0.1f);
+            // }
+        }
+        int[] gdSizes = new int[] { gameData.gamePieces.Length, gameData.snapPoints.Length, gameData.snapGrids.Length };
+        this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData, gameData.ToByteArray());
+        yield return null;
+    }
+
 
     /// <summary>
     /// Imports GameData from given path to json file.
@@ -180,6 +208,7 @@ public class GameImporter : MonoBehaviour
     private GameData ImportGameData(string path)
     {
         GameData result = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
+        // Debug.Log("Imported as: " + result);
         // set default name
         if (result.name == null || result.name == "")
         {
@@ -214,14 +243,5 @@ public class GameImporter : MonoBehaviour
         return result;
     }
 
-    private Color ConvertColor(string color)
-    {
-        Color result = new Color();
-        string[] colorParts = color.Split(',');
-        result.r = float.Parse(colorParts[0]) / 255;
-        result.g = float.Parse(colorParts[1]) / 255;
-        result.b = float.Parse(colorParts[2]) / 255;
-        result.a = float.Parse(colorParts[3]);
-        return result;
-    }
+
 }

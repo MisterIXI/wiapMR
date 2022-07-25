@@ -8,6 +8,7 @@ TagManager:
   - SnapPoint
   - Bullet
   - GameBoard
+  - MP_Controller
   layers:
   - Default
   - TransparentFX

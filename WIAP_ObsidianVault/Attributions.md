@@ -1,0 +1,1 @@
+Chess Set: [Low Poly Chess Set - Download Free 3D model by hanoldaa (@hanoldaa) [0f440e2] (sketchfab.com)](https://sketchfab.com/3d-models/low-poly-chess-set-0f440e2b01ca42f8b3fdee8178c51f20)

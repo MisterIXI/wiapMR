@@ -8,13 +8,13 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     private Collider ownCollider;
     private bool snapped;
     private SnapPoint potentialSnapPoint;
-
+    private bool _isGrabbing = false;
 
 
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Collision with SnapPoint (Enter)");
-        if (collider.gameObject.tag == "SnapPoint")
+        if (collider.gameObject.tag == "SnapPoint" && _isGrabbing)
         {
             if (potentialSnapPoint != null)
             {
@@ -29,7 +29,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     void OnTriggerExit(Collider collider)
     {
         Debug.Log("Collision with SnapPoint (Leave)");
-        if (collider.gameObject.tag == "SnapPoint")
+        if (collider.gameObject.tag == "SnapPoint" && _isGrabbing)
         {
             if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
             {

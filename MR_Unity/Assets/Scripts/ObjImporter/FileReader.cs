@@ -51,10 +51,9 @@ public class FileReader {
 		public List<string> mapKd;
 	}
 
-	public static ObjectFile ReadObjectFile (string path) {
+	public static ObjectFile ReadObjectFile (string[] lines) {
 
 		ObjectFile obj = new ObjectFile ();
-		string[] lines = File.ReadAllLines (path);
 
 		obj.usemtl = new List<string> ();
 		obj.v = new List<Vector3> ();

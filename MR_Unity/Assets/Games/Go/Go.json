@@ -4,7 +4,7 @@
     "height": 200,
     "width": 200,
     "texture": "Go.png",
-    "gamePieces":[
+    "gamePieces": [
         {
             "name": "GoWhite",
             "path": "GoStone.obj",
@@ -18,13 +18,27 @@
             "color": "0,0,0,1",
             "metallic": "1",
             "smoothness": "0.5"
+        },
+        {
+            "name": "ChessRookWhite",
+            "path": "ChessRook.obj",
+            "color": "145, 203, 238, 0.3",
+            "metallic": "0.5",
+            "smoothness": "0.5"
+        },
+        {
+            "name": "ChessRookBlack",
+            "path": "ChessRook.obj",
+            "color": "252, 171, 64,1",
+            "metallic": "0",
+            "smoothness": "0.5"
         }
     ],
     "snapPoints": [],
-    "snapGrids":[
+    "snapGrids": [
         {
-            "startX":4.638,
-            "startZ":4.638,
+            "startX": 4.638,
+            "startZ": 4.638,
             "endX": 195.365,
             "endZ": 195.365,
             "countX": 19,

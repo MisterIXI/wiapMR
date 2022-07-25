@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
+using Photon;
 
 namespace WiapMR.PUN
 {
@@ -26,10 +27,43 @@ namespace WiapMR.PUN
         public override void OnJoinedRoom()
         {
             Debug.Log("Joined Room");
-            GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
+            // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
+            gameObject.GetComponent<GameImporter>().DoStuff();
+            // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
             //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
         }
 
+        [PunRPC]
+        public void RPC_Test(string message, int[] textureSize, byte[] texture, byte[][] models)
+        {
+            Debug.Log(message);
+            Texture2D tex = new Texture2D(textureSize[0], textureSize[1]);
+            tex.LoadRawTextureData(texture);
+            Debug.Log(tex.width);
+            // print all models
+            for (int i = 0; i < models.Length; i++)
+            {
+                Debug.Log("Top level: " + models[i].Length);
+                for (int j = 0; j < models[i].Length; j++)
+                {
+                    Debug.Log(models[i][j]);
+                }
+            }
+        }
+
+        [PunRPC]
+        public void MasterSend()
+        {
+            Texture2D texture = new Texture2D(3, 3);
+            Debug.Log("Master: " + texture.width);
+            byte[][] bArr = new byte[][]{
+                new byte[]{1,2,3},
+                new byte[]{4,5,6},
+                new byte[]{7,8,9}
+            };
+            texture.GetRawTextureData();
+            this.photonView.RPC("RPC_Test", RpcTarget.All, "MasterSend", new int[] { texture.width, texture.height }, texture.GetRawTextureData(), bArr);
+        }
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             base.OnJoinRoomFailed(returnCode, message);
