@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8152425668735984565}
   - component: {fileID: 8191230048832815153}
   - component: {fileID: 2179816527276086727}
+  - component: {fileID: 8638247554332790380}
   m_Layer: 0
   m_Name: MP_Controller
   m_TagString: MP_Controller
@@ -97,3 +98,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerHeadPrefab: {fileID: 379046338466215282, guid: acf55f236b3917141b31e372ca2f62a1, type: 3}
   PlayerHandPrefab: {fileID: 0}
+  _player: {fileID: 0}
+  _head: {fileID: 0}
+--- !u!114 &8638247554332790380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152425668735984561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b044cfa5e163a34ea337b3adbfd8dd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

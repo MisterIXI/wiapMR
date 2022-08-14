@@ -13,9 +13,10 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 
     void OnTriggerEnter(Collider collider)
     {
-        // Debug.Log("Collision with SnapPoint (Enter)");
+        Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + _isGrabbing);
         if (collider.gameObject.tag == "SnapPoint" && _isGrabbing)
         {
+            Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
             if (potentialSnapPoint != null)
             {
                 potentialSnapPoint.UnhighlightHologram();
@@ -51,6 +52,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
             photonView.RPC("UnSnap", RpcTarget.All);
         }
         SnapPoint.HolographicPreviewAll(gameObject);
+        _isGrabbing = true;
     }
     public void OnInputUp(InputEventData eventData)
     {
@@ -60,6 +62,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
             transform.position = potentialSnapPoint.transform.position;
         }
         SnapPoint.StopHolographicPreviewAll();
+        _isGrabbing = false;
     }
 
     [PunRPC]

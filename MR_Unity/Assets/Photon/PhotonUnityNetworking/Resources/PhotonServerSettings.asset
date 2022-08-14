@@ -59,6 +59,9 @@ MonoBehaviour:
   - MasterSend
   - RPC_Test
   - ImportGame
+  - ReceiveData
+  - SendSmallData
+  - SubscribeToDataEvents
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

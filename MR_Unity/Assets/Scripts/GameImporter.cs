@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using System.Linq;
 
 public class GameImporter : MonoBehaviourPunCallbacks
 {
@@ -15,8 +16,11 @@ public class GameImporter : MonoBehaviourPunCallbacks
     private readonly Vector3 GAMEPIECE_START_SIZE = new Vector3(10f, 10f, 10f);
     public GameObject snapPointPrefab;
     public GameObject gamePiecePrefab;
-
-
+    private int _waitingForData = 0;
+    private byte[][] _gamePieceData;
+    private byte[] _textureData;
+    private string[] _gamePieceNames;
+    private byte[] _serializedGameData;
     void Start()
     {
         // //read go.json from Assets/Games/
@@ -34,6 +38,10 @@ public class GameImporter : MonoBehaviourPunCallbacks
     }
     public void DoStuff()
     {
+        if (_waitingForData != 0)
+        {
+            throw new Exception("Still waiting for data");
+        }
         GAME_DATA_PATH = Application.dataPath + "/Games/";
         string path = Application.dataPath + "/Games/Go/";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
@@ -49,25 +57,34 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
     }
     [PunRPC]
-    public void ImportGame(byte[] texData, string[] gpNames, byte[][] gpData, byte[] serializedGD)
+    public void ImportGame()
     {
         Debug.Log("Importing game...");
+        byte[] texData = _textureData;
+        string[] gpNames = _gamePieceNames;
+        byte[][] gpData = _gamePieceData;
+        byte[] serializedGD = _serializedGameData;
+        _textureData = null;
+        _gamePieceNames = null;
+        _gamePieceData = null;
+        _serializedGameData = null;
+        UnsubcribeFromDataEvents();
         // // Debug.Log(gameData.snapGrid.countX);
-        // GameObject parentObject = new GameObject("GameBoard");
-        // parentObject.AddComponent<GameController>();
-        // GameData gameData = new GameData(serializedGD);
-        // CreateGameBoard(gameData, parentObject, texData);
-        // CreateGamePieces(gameData, parentObject, gpNames, gpData);
-        // CreateSnapPoints(gameData, parentObject);
-        // //set gameboard inactive to avoid snappoints colliding with gamepieces
-        // parentObject.SetActive(false);
-        // parentObject.transform.localScale = Vector3.one * 0.1f;
-        // parentObject.SetActive(true);
-        // parentObject.AddComponent<BoxCollider>();
-        // parentObject.AddComponent<NearInteractionGrabbable>();
-        // parentObject.AddComponent<ObjectManipulator>();
-        // ScaleDown(parentObject, 0.1f);
-        // CheckForPlayers(parentObject);
+        GameObject parentObject = new GameObject("GameBoard");
+        parentObject.AddComponent<GameController>();
+        GameData gameData = new GameData(serializedGD);
+        CreateGameBoard(gameData, parentObject, texData);
+        CreateGamePieces(gameData, parentObject, gpNames, gpData);
+        CreateSnapPoints(gameData, parentObject);
+        //set gameboard inactive to avoid snappoints colliding with gamepieces
+        parentObject.SetActive(false);
+        parentObject.transform.localScale = Vector3.one * 0.1f;
+        parentObject.SetActive(true);
+        parentObject.AddComponent<BoxCollider>();
+        parentObject.AddComponent<NearInteractionGrabbable>();
+        parentObject.AddComponent<ObjectManipulator>();
+        ScaleDown(parentObject, 0.01f);
+        CheckForPlayers(parentObject);
     }
 
     private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
@@ -157,10 +174,16 @@ public class GameImporter : MonoBehaviourPunCallbacks
             }
         }
     }
-    private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, string[][] gpData)
+    private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
     {
         List<string> gpNamesList = new List<string>(gpNames);
         GameObject[] result = new GameObject[gameData.gamePieces.Length];
+        //parse gpData to text[][]
+        string[][] gpDataStrings = new string[gpData.Length][];
+        for (int i = 0; i < gpData.Length; i++)
+        {
+            gpDataStrings[i] = System.Text.Encoding.UTF8.GetString(gpData[i]).Split('\n');
+        }
         // loop through the gamepieces
         for (int i = 0; i < gameData.gamePieces.Length; i++)
         {
@@ -170,7 +193,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
             // GameObject obj = new GameObject();
             ObjectLoader loader = piece.AddComponent<ObjectLoader>();
-            loader.Load(gpData[gpNamesList.IndexOf(meshPath)]);
+            loader.Load(gpDataStrings[gpNamesList.IndexOf(meshPath)]);
             piece.transform.position = new Vector3(-10 - (i / 10 * 10), 0, i % 10 * 10);
             Material currentMat = piece.GetComponent<MeshRenderer>().material;
             currentMat.color = ImporterHelper.ConvertColor(gameData.gamePieces[i].color);
@@ -198,16 +221,21 @@ public class GameImporter : MonoBehaviourPunCallbacks
 
     private IEnumerator TriggerGameImport(string gameDataPath, GameData gameData)
     {
-        byte[] texArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.texture);
+        byte[] textureArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.texture);
         List<byte[]> meshList = new List<byte[]>();
 
         List<string> deduplicatedGamePieces = ImporterHelper.DeduplicateGamePieces(gameData);
-        string[][] gamePiecesData = new string[deduplicatedGamePieces.Count][];
         byte[][] gamePiecesData_BYTES = new byte[deduplicatedGamePieces.Count][];
         for (int i = 0; i < deduplicatedGamePieces.Count; i++)
         {
-            gamePiecesData[i] = System.IO.File.ReadAllLines(gameDataPath + deduplicatedGamePieces[i]);
-            gamePiecesData_BYTES[i] = System.IO.File.ReadAllBytes(gameDataPath + deduplicatedGamePieces[i]);
+            string[] stringData = System.IO.File.ReadAllLines(gameDataPath + deduplicatedGamePieces[i]);
+            string data = "";
+            for (int j = 0; j < stringData.Length; j++)
+            {
+                data += stringData[j] + "\n";
+            }
+            gamePiecesData_BYTES[i] = System.Text.Encoding.UTF8.GetBytes(data);
+            //System.IO.File.ReadAllBytes(gameDataPath + deduplicatedGamePieces[i]);
             // ObjectLoader loader = tempObj.AddComponent<ObjectLoader>();
             // loader.Load(gameDataPath, deduplicatedGamePieces[i]);
             // while (!loader.isLoaded)
@@ -217,24 +245,74 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // }
         }
         int[] gdSizes = new int[] { gameData.gamePieces.Length, gameData.snapPoints.Length, gameData.snapGrids.Length };
-        // this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData, gameData.ToByteArray());
-        string arrString = "";
-        for (int i = 0; i < gamePiecesData.Length; i++)
-        {
-            for (int j = 0; j < gamePiecesData[i].Length; j++)
-            {
-                arrString += gamePiecesData[i][j];
-            }
-            arrString += "\n";
-        }
         Debug.Log("DEBUG:" + gamePiecesData_BYTES.Length + " " + gamePiecesData_BYTES[0].Length + "," + gamePiecesData_BYTES[1].Length);
         //TODO: split data up in smaller junks and send them to the clients via RPC
         // https://forum.photonengine.com/discussion/13276/any-way-to-send-large-data-via-rpcs-without-it-kicking-us-offline
         // max 512kb/message!
-        this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData_BYTES, new byte[] { 0 });
+        //TODO: this could probably be optimized to send only to others, not also itself
+        int calcChunks = 1 + 1 + gamePiecesData_BYTES.Length; // smalldata + texturedata + gamepiecesChunks
+        this.photonView.RPC("SubscribeToDataEvents", RpcTarget.All, calcChunks);
+        this.photonView.RPC("SendSmallData", RpcTarget.All, deduplicatedGamePieces.ToArray(), gameData.ToByteArray(), gamePiecesData_BYTES.Length);
+        DataTransfer dt = GameObject.FindObjectOfType<DataTransfer>();
+        for (int i = 0; i < gamePiecesData_BYTES.Length; i++)
+        {
+            dt.SendData(gamePiecesData_BYTES[i], "GamePiece_" + i);
+        }
+        dt.SendData(textureArr, "Texture");
+        // this.photonView.RPC("ImportGame", RpcTarget.All, textureArr, deduplicatedGamePieces.ToArray(), gamePiecesData_BYTES, gameData.ToByteArray());
+
         yield return null;
     }
+    [PunRPC]
+    public void SendSmallData(string[] gamePieces, byte[] gameData, int gamePieceArrSize)
+    {
+        _gamePieceNames = gamePieces;
+        _serializedGameData = gameData;
+        _gamePieceData = new byte[gamePieceArrSize][];
+        _waitingForData--;
+        if (_waitingForData == 0)
+        {
+            ImportGame();
+        }
+    }
+    [PunRPC]
+    public void SubscribeToDataEvents(int calcChunks)
+    {
+        _waitingForData = calcChunks;
+        GameObject.FindObjectOfType<DataTransfer>().OnDataReceived += HandlePieceData;
+        GameObject.FindObjectOfType<DataTransfer>().OnDataReceived += HandleTextureData;
+    }
+    private void UnsubcribeFromDataEvents()
+    {
+        GameObject.FindObjectOfType<DataTransfer>().OnDataReceived -= HandlePieceData;
+        GameObject.FindObjectOfType<DataTransfer>().OnDataReceived -= HandleTextureData;
+    }
+    private void HandlePieceData(string tag, byte[] data)
+    {
+        if (tag.StartsWith("GamePiece"))
+        {
+            int index = int.Parse(tag.Substring(tag.IndexOf("_") + 1));
+            _gamePieceData[index] = data;
+            _waitingForData--;
+            if (_waitingForData == 0)
+            {
+                ImportGame();
+            }
+        }
+    }
 
+    private void HandleTextureData(string tag, byte[] data)
+    {
+        if (tag == "Texture")
+        {
+            _textureData = data;
+            _waitingForData--;
+            if (_waitingForData == 0)
+            {
+                ImportGame();
+            }
+        }
+    }
 
     /// <summary>
     /// Imports GameData from given path to json file.
