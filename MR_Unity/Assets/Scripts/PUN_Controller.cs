@@ -27,12 +27,24 @@ namespace WiapMR.PUN
         public override void OnJoinedRoom()
         {
             Debug.Log("Joined Room");
+            GetComponent<PlayerManager>().Initialize();
             // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
             gameObject.GetComponent<GameImporter>().DoStuff();
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log("Is not master client");
+            }
+            else
+            {
+                Debug.Log("Is master client, not spawning board");
+                // gameObject.GetComponent<GameImporter>().DoStuff();
+            }
             // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
             //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
         }
-
+        public override void OnLeftRoom(){
+            Debug.Log("Left Room :(");
+        }
         [PunRPC]
         public void RPC_Test(string message, int[] textureSize, byte[] texture, byte[][] models)
         {

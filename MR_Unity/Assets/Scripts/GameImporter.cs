@@ -5,7 +5,8 @@ using System.IO;
 using Photon.Pun;
 using System.Runtime.InteropServices;
 using System;
-
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class GameImporter : MonoBehaviourPunCallbacks
 {
@@ -48,20 +49,25 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
     }
     [PunRPC]
-    public void ImportGame(byte[] texData, string[] gpNames, string[][] gpData, byte[] serializedGD)
+    public void ImportGame(byte[] texData, string[] gpNames, byte[][] gpData, byte[] serializedGD)
     {
-        // Debug.Log(gameData.snapGrid.countX);
-        GameObject parentObject = new GameObject("GameBoard");
-        GameData gameData = new GameData(serializedGD);
-        CreateGameBoard(gameData, parentObject, texData);
-        CreateGamePieces(gameData, parentObject, gpNames, gpData);
-        CreateSnapPoints(gameData, parentObject);
-        //set gameboard inactive to avoid snappoints colliding with gamepieces
-        parentObject.SetActive(false);
-
-
-        parentObject.transform.localScale = Vector3.one * 0.1f;
-        parentObject.SetActive(true);
+        Debug.Log("Importing game...");
+        // // Debug.Log(gameData.snapGrid.countX);
+        // GameObject parentObject = new GameObject("GameBoard");
+        // parentObject.AddComponent<GameController>();
+        // GameData gameData = new GameData(serializedGD);
+        // CreateGameBoard(gameData, parentObject, texData);
+        // CreateGamePieces(gameData, parentObject, gpNames, gpData);
+        // CreateSnapPoints(gameData, parentObject);
+        // //set gameboard inactive to avoid snappoints colliding with gamepieces
+        // parentObject.SetActive(false);
+        // parentObject.transform.localScale = Vector3.one * 0.1f;
+        // parentObject.SetActive(true);
+        // parentObject.AddComponent<BoxCollider>();
+        // parentObject.AddComponent<NearInteractionGrabbable>();
+        // parentObject.AddComponent<ObjectManipulator>();
+        // ScaleDown(parentObject, 0.1f);
+        // CheckForPlayers(parentObject);
     }
 
     private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
@@ -74,13 +80,10 @@ public class GameImporter : MonoBehaviourPunCallbacks
         gameTexture.transform.parent = parentObject.transform;
         // create a new Texture and load the given texture from path
         Texture2D tex = new Texture2D(gameData.width, gameData.height, TextureFormat.RGBA32, false);
-        //print texData
-
-
         // tex.LoadRawTextureData(texData);
         tex.LoadImage(texData);
         tex.Apply();
-        Debug.Log(tex);
+        // Debug.Log(tex);
         // tex.filterMode = FilterMode.Point;
         // Debug.Log("Path:" + GAMEBOARD_PATH + gameData.texture + " | tex: " + tex);
         // set the shader to texture to avoid a blurry endresult
@@ -95,6 +98,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
         game.transform.parent = parentObject.transform;
         // take color of texture at 0,0 to try and make it fit better
         game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
+        PhotonView pv = game.AddComponent<PhotonView>();
+        pv.ViewID = 2000;
     }
 
     private void CreateSnapPoints(GameData gameData, GameObject parentObject)
@@ -137,6 +142,21 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
     }
 
+    private void CheckForPlayers(GameObject parentObject)
+    {
+        // move all *other* spawned players to GameBoard
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (!players[i].GetComponent<PhotonView>().IsMine)
+            {
+                if (players[i].transform.parent != parentObject.transform)
+                {
+                    players[i].transform.parent = parentObject.transform;
+                }
+            }
+        }
+    }
     private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, string[][] gpData)
     {
         List<string> gpNamesList = new List<string>(gpNames);
@@ -167,8 +187,10 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // with it, it seems to reload the variables and renders correctly
             currentMat.shader = Shader.Find("Standard");
             piece.transform.parent = parentObject.transform;
-            Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
+            // Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
             ImporterHelper.ScaleUp(piece, GAMEPIECE_START_SIZE);
+            PhotonView pv = piece.AddComponent<PhotonView>();
+            pv.ViewID = 2001 + i;
             result[i] = piece;
         }
         return result;
@@ -179,13 +201,13 @@ public class GameImporter : MonoBehaviourPunCallbacks
         byte[] texArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.texture);
         List<byte[]> meshList = new List<byte[]>();
 
-        GameObject tempObj = new GameObject();
-        tempObj.SetActive(false);
         List<string> deduplicatedGamePieces = ImporterHelper.DeduplicateGamePieces(gameData);
         string[][] gamePiecesData = new string[deduplicatedGamePieces.Count][];
+        byte[][] gamePiecesData_BYTES = new byte[deduplicatedGamePieces.Count][];
         for (int i = 0; i < deduplicatedGamePieces.Count; i++)
         {
             gamePiecesData[i] = System.IO.File.ReadAllLines(gameDataPath + deduplicatedGamePieces[i]);
+            gamePiecesData_BYTES[i] = System.IO.File.ReadAllBytes(gameDataPath + deduplicatedGamePieces[i]);
             // ObjectLoader loader = tempObj.AddComponent<ObjectLoader>();
             // loader.Load(gameDataPath, deduplicatedGamePieces[i]);
             // while (!loader.isLoaded)
@@ -195,7 +217,21 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // }
         }
         int[] gdSizes = new int[] { gameData.gamePieces.Length, gameData.snapPoints.Length, gameData.snapGrids.Length };
-        this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData, gameData.ToByteArray());
+        // this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData, gameData.ToByteArray());
+        string arrString = "";
+        for (int i = 0; i < gamePiecesData.Length; i++)
+        {
+            for (int j = 0; j < gamePiecesData[i].Length; j++)
+            {
+                arrString += gamePiecesData[i][j];
+            }
+            arrString += "\n";
+        }
+        Debug.Log("DEBUG:" + gamePiecesData_BYTES.Length + " " + gamePiecesData_BYTES[0].Length + "," + gamePiecesData_BYTES[1].Length);
+        //TODO: split data up in smaller junks and send them to the clients via RPC
+        // https://forum.photonengine.com/discussion/13276/any-way-to-send-large-data-via-rpcs-without-it-kicking-us-offline
+        // max 512kb/message!
+        this.photonView.RPC("ImportGame", RpcTarget.All, texArr, deduplicatedGamePieces.ToArray(), gamePiecesData_BYTES, new byte[] { 0 });
         yield return null;
     }
 
@@ -243,5 +279,9 @@ public class GameImporter : MonoBehaviourPunCallbacks
         return result;
     }
 
+    public void ScaleDown(GameObject obj, float scale)
+    {
+        obj.transform.localScale = new Vector3(scale, scale, scale);
+    }
 
 }

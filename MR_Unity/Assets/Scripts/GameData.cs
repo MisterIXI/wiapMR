@@ -49,6 +49,17 @@ public class GameData
         return name + "(" + height + "," + width + ")";
     }
 
+    public GameData()
+    {
+        name = "";
+        height = 0;
+        width = 0;
+        texture = "";
+        gamePieces = new GamePiece[0];
+        snapPoints = new SnapPointStruct[0];
+        snapGrids = new SnapGrid[0];
+    }
+
     public byte[] ToByteArray()
     {
         // use a memorystream to save everything in one byte array
@@ -95,15 +106,7 @@ public class GameData
         }
     }
 
-    public GameData(){
-        name = "";
-        height = 0;
-        width = 0;
-        texture = "";
-        gamePieces = new GamePiece[0];
-        snapPoints = new SnapPointStruct[0];
-        snapGrids = new SnapGrid[0];
-    }
+
     public GameData(byte[] data)
     {
         // use a memorystream to load everything from the byte array

@@ -52,7 +52,7 @@ public class ImporterHelper : MonoBehaviour
         Destroy(gameObject.GetComponent<BoxCollider>());
         gameObject.AddComponent<BoxCollider>();
         // gameObject.GetComponent<MeshRenderer>();
-        Debug.Log("Scaled up to: " + gameObject.GetComponent<MeshRenderer>().bounds);
+        // Debug.Log("Scaled up to: " + gameObject.GetComponent<MeshRenderer>().bounds);
 
     }
 
