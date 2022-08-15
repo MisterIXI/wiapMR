@@ -116,7 +116,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         // take color of texture at 0,0 to try and make it fit better
         game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
         PhotonView pv = game.AddComponent<PhotonView>();
-        pv.ViewID = 2000;
+        pv.ViewID = 2500;
     }
 
     private void CreateSnapPoints(GameData gameData, GameObject parentObject)
@@ -213,7 +213,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
             ImporterHelper.ScaleUp(piece, GAMEPIECE_START_SIZE);
             PhotonView pv = piece.AddComponent<PhotonView>();
-            pv.ViewID = 2001 + i;
+            pv.ViewID = 2501 + i;
             result[i] = piece;
         }
         return result;

@@ -11,7 +11,6 @@ public class PlayerManager : MonoBehaviour
     public GameObject _player;
     public  GameObject _head;
 
-
     public void Initialize()
     {
         _player = new GameObject();
