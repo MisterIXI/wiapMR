@@ -18,7 +18,7 @@ public class SnapPoint : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         material = GetComponent<MeshRenderer>().material;
         snapPoints.Add(this);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
 
@@ -36,7 +36,7 @@ public class SnapPoint : MonoBehaviour
 
     public void HolographicPreviewStart(GameObject obj)
     {
-        Debug.Log("HolographicPreviewStart | Material: " + material);
+        // Debug.Log("HolographicPreviewStart | Material: " + material);
         gameObject.SetActive(true);
         material.color = SP_COLOR_NORMAL;
         meshFilter.mesh = obj.GetComponent<MeshFilter>().mesh;

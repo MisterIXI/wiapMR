@@ -11,8 +11,10 @@ namespace WiapMR.PUN
         PhotonView pv;
         void Start()
         {
+            Debug.Log("Head alive!");
             cam = Camera.main;
             pv = GetComponent<PhotonView>();
+            Debug.Log("Is in room: " + PhotonNetwork.InRoom + " |Room: " +  PhotonNetwork.CurrentRoom);
         }
 
         // Update is called once per frame
@@ -20,9 +22,16 @@ namespace WiapMR.PUN
         {
             if (pv.IsMine)
             {
+                // Debug.Log("Head is mine!");
                 transform.localPosition = cam.transform.position;
                 transform.localRotation = cam.transform.rotation;
             }
+        }
+
+        private void OnDestroy()
+        {
+            // Debug.Log("Head destroyed!");
+            Debug.Log("Is in room: " + PhotonNetwork.InRoom + " |Room: " +  PhotonNetwork.CurrentRoom);
         }
     }
 }

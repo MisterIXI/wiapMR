@@ -433,8 +433,10 @@ public class AnchorModuleScript : MonoBehaviour
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             yield return www.SendWebRequest();
+            #pragma warning disable CS0618 // Type or member is obsolete
             if (www.isNetworkError || www.isHttpError)
             {
+            #pragma warning restore CS0618 // Type or member is obsolete
                 Debug.Log(www.error);
             }
             else
