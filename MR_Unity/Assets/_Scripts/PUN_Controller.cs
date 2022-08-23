@@ -32,10 +32,10 @@ namespace WiapMR.PUN
             if (!PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Is not master client");
-                gameObject.GetComponent<GameImporter>().DoStuff();
             }
             else
             {
+                gameObject.GetComponent<GameImporter>().DoStuff();
                 Debug.Log("Is master client, not spawning board");
             }
             // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();

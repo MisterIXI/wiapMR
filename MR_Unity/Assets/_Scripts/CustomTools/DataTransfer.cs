@@ -51,7 +51,7 @@ public class DataTransfer : MonoBehaviour
         // check if all chunks are received
         if (currentSteps == totalSteps)
         {
-            Debug.Log("Event: " + OnDataReceived + "| Tag: " + tag + "| Data: " + dataDictionary[tag].Length);
+            // Debug.Log("Event: " + OnDataReceived + "| Tag: " + tag + "| Data: " + dataDictionary[tag].Length);
             OnDataReceived?.Invoke(tag, dataDictionary[tag]);
             dataProgress.Remove(tag);
             dataDictionary.Remove(tag);

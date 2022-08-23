@@ -23,8 +23,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
     private byte[] _serializedGameData;
     void Start()
     {
-        // //read go.json from Assets/Games/
-        // string path = Application.dataPath + "/Games/";
+        // //read go.json from Assets/_Games/
+        // string path = Application.dataPath + "/_Games/";
         // string[] files = Directory.GetFiles(path);
         // // print all files
         // foreach (string file in files)
@@ -42,8 +42,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
         {
             throw new Exception("Still waiting for data");
         }
-        GAME_DATA_PATH = Application.dataPath + "/Games/";
-        string path = Application.dataPath + "/Games/Go/";
+        GAME_DATA_PATH = Application.dataPath + "/_Games/";
+        string path = Application.dataPath + "/_Games/Go/";
         // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
         try
         {
@@ -245,7 +245,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // }
         }
         int[] gdSizes = new int[] { gameData.gamePieces.Length, gameData.snapPoints.Length, gameData.snapGrids.Length };
-        Debug.Log("DEBUG:" + gamePiecesData_BYTES.Length + " " + gamePiecesData_BYTES[0].Length + "," + gamePiecesData_BYTES[1].Length);
+        // Debug.Log("DEBUG:" + gamePiecesData_BYTES.Length + " " + gamePiecesData_BYTES[0].Length + "," + gamePiecesData_BYTES[1].Length);
         //TODO: split data up in smaller junks and send them to the clients via RPC
         // https://forum.photonengine.com/discussion/13276/any-way-to-send-large-data-via-rpcs-without-it-kicking-us-offline
         // max 512kb/message!
