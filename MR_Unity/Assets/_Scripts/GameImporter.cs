@@ -8,12 +8,15 @@ using System;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using System.Linq;
+using WiapMR.PUN;
 
 public class GameImporter : MonoBehaviourPunCallbacks
 {
     private string GAME_DATA_PATH;
     private const float GAMEBOARD_THICKNESS = 5f;
-    private readonly Vector3 GAMEPIECE_START_SIZE = new Vector3(10f, 10f, 10f);
+    private readonly float GAMEPIECE_START_FACTOR = 0.01f;
+    private readonly float GAMEBOARD_START_FACTOR = 0.1f;
+
     public GameObject snapPointPrefab;
     public GameObject gamePiecePrefab;
     private int _waitingForData = 0;
@@ -21,6 +24,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
     private byte[] _textureData;
     private string[] _gamePieceNames;
     private byte[] _serializedGameData;
+    public GameObject GameRoot { get; private set; }
+    public GameObject GameBoard { get; private set; }
     void Start()
     {
         // //read go.json from Assets/_Games/
@@ -70,21 +75,33 @@ public class GameImporter : MonoBehaviourPunCallbacks
         _serializedGameData = null;
         UnsubcribeFromDataEvents();
         // // Debug.Log(gameData.snapGrid.countX);
-        GameObject parentObject = new GameObject("GameBoard");
-        parentObject.AddComponent<GameController>();
+        GameObject gameRoot = new GameObject("GameRoot");
+        GameObject boardObj = new GameObject("GameBoard");
+        boardObj.AddComponent<GameController>();
         GameData gameData = new GameData(serializedGD);
-        CreateGameBoard(gameData, parentObject, texData);
-        CreateGamePieces(gameData, parentObject, gpNames, gpData);
-        CreateSnapPoints(gameData, parentObject);
+        CreateGameBoard(gameData, boardObj, texData);
+        CreateGamePieces(gameData, gameRoot, gpNames, gpData);
+        CreateSnapPoints(gameData, boardObj);
         //set gameboard inactive to avoid snappoints colliding with gamepieces
-        parentObject.SetActive(false);
-        parentObject.transform.localScale = Vector3.one * 0.1f;
-        parentObject.SetActive(true);
-        parentObject.AddComponent<BoxCollider>();
-        parentObject.AddComponent<NearInteractionGrabbable>();
-        parentObject.AddComponent<ObjectManipulator>();
-        ScaleDown(parentObject, 0.01f);
-        CheckForPlayers(parentObject);
+        boardObj.SetActive(false);
+        boardObj.transform.localScale = Vector3.one * 0.1f;
+        boardObj.SetActive(true);
+        BoxCollider rBC = gameRoot.AddComponent<BoxCollider>();
+        BoxCollider cubeColl = boardObj.GetComponentInChildren<BoxCollider>();
+        // Debug.Log("CUBE SIZE| " + cubeColl.bounds.size);
+        // Debug.Log("CUBE POS| " + cubeColl.gameObject.transform.position);
+        rBC.size = cubeColl.bounds.size;
+        rBC.center = cubeColl.transform.position;
+
+        gameRoot.AddComponent<NearInteractionGrabbable>();
+        gameRoot.AddComponent<ObjectManipulator>();
+        // ScaleDown(boardObj, 0.01f);
+        boardObj.transform.parent = gameRoot.transform;
+        ScaleDown(boardObj, 0.01f);
+        CheckForPlayers(gameRoot);
+        this.GameRoot = gameRoot;
+        this.GameBoard = boardObj;
+
     }
 
     private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
@@ -117,6 +134,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
         game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
         PhotonView pv = game.AddComponent<PhotonView>();
         pv.ViewID = 2500;
+        // ScaleDown(gameTexture, GAMEBOARD_START_FACTOR);
+        // ScaleDown(game, GAMEBOARD_START_FACTOR);
     }
 
     private void CreateSnapPoints(GameData gameData, GameObject parentObject)
@@ -159,12 +178,15 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
     }
 
-    private void CheckForPlayers(GameObject parentObject)
+    public void CheckForPlayers(GameObject parentObject)
     {
+        if (parentObject == null)
+            return;
         // move all *other* spawned players to GameBoard
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
+            players[i].GetComponent<HeadSync>().parent = parentObject;
             if (!players[i].GetComponent<PhotonView>().IsMine)
             {
                 if (players[i].transform.parent != parentObject.transform)
@@ -173,6 +195,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
                 }
             }
         }
+
     }
     private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
     {
@@ -194,7 +217,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
             // GameObject obj = new GameObject();
             ObjectLoader loader = piece.AddComponent<ObjectLoader>();
             loader.Load(gpDataStrings[gpNamesList.IndexOf(meshPath)]);
-            piece.transform.position = new Vector3(-10 - (i / 10 * 10), 0, i % 10 * 10);
+            float posOffset = 10 * GAMEPIECE_START_FACTOR;
+            piece.transform.position = new Vector3(-posOffset - (i / 10 * posOffset), 0, i % 10 * posOffset);
             Material currentMat = piece.GetComponent<MeshRenderer>().material;
             currentMat.color = ImporterHelper.ConvertColor(gameData.gamePieces[i].color);
             currentMat.SetFloat("_Metallic", gameData.gamePieces[i].metallic);
@@ -211,7 +235,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
             currentMat.shader = Shader.Find("Standard");
             piece.transform.parent = parentObject.transform;
             // Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
-            ImporterHelper.ScaleUp(piece, GAMEPIECE_START_SIZE);
+            // ImporterHelper.ScaleUp(piece, new Vector3(GAMEPIECE_START_FACTOR, GAMEPIECE_START_FACTOR, GAMEPIECE_START_FACTOR));
+            ImporterHelper.ScaleUp(piece, new Vector3(0.1f, 0.1f, 0.1f));
             PhotonView pv = piece.AddComponent<PhotonView>();
             pv.ViewID = 2501 + i;
             result[i] = piece;

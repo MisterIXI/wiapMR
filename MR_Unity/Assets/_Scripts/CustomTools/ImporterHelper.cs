@@ -31,10 +31,11 @@ public class ImporterHelper : MonoBehaviour
         return deduplicatedGamePieces;
     }
 
-    public static void ScaleUp(GameObject gameObject, Vector3 scale)
+    public static void ScaleUp(GameObject objectToScale, Vector3 scale)
     {
+        Debug.Log("Old scale: " + objectToScale.transform.localScale);
         // scale up the game object to match mesh bounding box and scale
-        Vector3 meshScale = gameObject.GetComponent<MeshRenderer>().bounds.size;
+        Vector3 meshScale = objectToScale.GetComponent<MeshRenderer>().bounds.size;
         float[] scaleFactor = new float[] { scale.x / meshScale.x, scale.y / meshScale.y, scale.z / meshScale.z };
         int arg = 0;
         float max = meshScale[0];
@@ -46,13 +47,15 @@ public class ImporterHelper : MonoBehaviour
                 arg = i;
             }
         }
-        Vector3 objectScale = gameObject.transform.localScale;
+        Vector3 objectScale = objectToScale.transform.localScale;
         Vector3 meshScaleScaled = new Vector3(objectScale.x * scaleFactor[arg], objectScale.y * scaleFactor[arg], objectScale.z * scaleFactor[arg]);
-        gameObject.transform.localScale = meshScaleScaled;
-        Destroy(gameObject.GetComponent<BoxCollider>());
-        gameObject.AddComponent<BoxCollider>();
+        objectToScale.transform.localScale = meshScaleScaled;
+        Destroy(objectToScale.GetComponent<BoxCollider>());
+        objectToScale.AddComponent<BoxCollider>();
         // gameObject.GetComponent<MeshRenderer>();
         // Debug.Log("Scaled up to: " + gameObject.GetComponent<MeshRenderer>().bounds);
+        Debug.Log("New scale: " + objectToScale.transform.localScale);
+
 
     }
 

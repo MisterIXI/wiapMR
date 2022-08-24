@@ -33,9 +33,9 @@ public class ConsoleToGUI : MonoBehaviour
     void OnGUI()
     {
         if (!doShow) { return; }
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
-           new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
-        GUI.TextArea(new Rect(10, 10, 540, 370), myLog);
+        // GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
+        //    new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
+        // GUI.TextArea(new Rect(10, 10, 540, 370), myLog);
         if(textMesh != null)
         {
             textMesh.text = myLog;
