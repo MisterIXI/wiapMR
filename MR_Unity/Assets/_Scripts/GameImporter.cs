@@ -98,10 +98,10 @@ public class GameImporter : MonoBehaviourPunCallbacks
         // ScaleDown(boardObj, 0.01f);
         boardObj.transform.parent = gameRoot.transform;
         ScaleDown(boardObj, 0.01f);
-        CheckForPlayers(gameRoot);
+        // CheckForPlayers(gameRoot);
+        AddToBoardSyncer(boardObj);
         this.GameRoot = gameRoot;
         this.GameBoard = boardObj;
-
     }
 
     private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
@@ -178,6 +178,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
     }
 
+    // TODO: once the alternative is finished delete this method
     public void CheckForPlayers(GameObject parentObject)
     {
         if (parentObject == null)
@@ -186,8 +187,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
-            players[i].GetComponent<HeadSync>().parent = parentObject;
-            if (!players[i].GetComponent<PhotonView>().IsMine)
+            if (!players[i].GetComponent<HeadSync>().pv.IsMine)
             {
                 if (players[i].transform.parent != parentObject.transform)
                 {
@@ -195,7 +195,18 @@ public class GameImporter : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
 
+    public void AddToBoardSyncer(GameObject board)
+    {
+        var syncObjs = GameObject.FindObjectsOfType<SyncPos>();
+        foreach (var syncObj in syncObjs)
+        {
+            if (syncObj.photonView.IsMine && syncObj.gameObject.name.StartsWith("BoardPosHelper"))
+            {
+                syncObj.otherToSync = board;
+            }
+        }
     }
     private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
     {

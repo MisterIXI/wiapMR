@@ -44,6 +44,14 @@ namespace WiapMR.PUN
             // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
             //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
         }
+
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            GetComponent<PlayerManager>().HeadHelper.GetComponent<SyncPos>()
+                .photonView.RPC("SpawnHead", newPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
+            GetComponent<PlayerManager>().BoardHelper.GetComponent<SyncPos>()
+                .photonView.RPC("SpawnHead", newPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
+        }
         public override void OnLeftRoom()
         {
             Debug.Log("Left Room :(");
