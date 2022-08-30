@@ -6,6 +6,7 @@ using Photon.Pun;
 using System.Runtime.InteropServices;
 using System;
 using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.UI;
 using System.Linq;
 using WiapMR.PUN;
@@ -86,15 +87,16 @@ public class GameImporter : MonoBehaviourPunCallbacks
         boardObj.SetActive(false);
         boardObj.transform.localScale = Vector3.one * 0.1f;
         boardObj.SetActive(true);
-        BoxCollider rBC = gameRoot.AddComponent<BoxCollider>();
         BoxCollider cubeColl = boardObj.GetComponentInChildren<BoxCollider>();
+        BoxCollider rBC = boardObj.AddComponent<BoxCollider>();
         // Debug.Log("CUBE SIZE| " + cubeColl.bounds.size);
         // Debug.Log("CUBE POS| " + cubeColl.gameObject.transform.position);
         rBC.size = cubeColl.bounds.size;
         rBC.center = cubeColl.transform.position;
-
-        gameRoot.AddComponent<NearInteractionGrabbable>();
-        gameRoot.AddComponent<ObjectManipulator>();
+        Destroy(cubeColl);
+        boardObj.AddComponent<NearInteractionGrabbable>();
+        var om = boardObj.AddComponent<ObjectManipulator>();
+        om.TwoHandedManipulationType = TransformFlags.Move | TransformFlags.Rotate;
         // ScaleDown(boardObj, 0.01f);
         boardObj.transform.parent = gameRoot.transform;
         ScaleDown(boardObj, 0.01f);
@@ -134,8 +136,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
         game.transform.parent = parentObject.transform;
         // take color of texture at 0,0 to try and make it fit better
         game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
-        PhotonView pv = game.AddComponent<PhotonView>();
-        pv.ViewID = 2500;
+        // PhotonView pv = game.AddComponent<PhotonView>();
+        // pv.ViewID = 2500;
         // ScaleDown(gameTexture, GAMEBOARD_START_FACTOR);
         // ScaleDown(game, GAMEBOARD_START_FACTOR);
     }
