@@ -20,6 +20,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
 
     public GameObject snapPointPrefab;
     public GameObject gamePiecePrefab;
+    public GameObject ScrollListPrefab;
+    public GameObject ButtonPrefab;
     private int _waitingForData = 0;
     private byte[][] _gamePieceData;
     private byte[] _textureData;
@@ -27,6 +29,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
     private byte[] _serializedGameData;
     public GameObject GameRoot { get; private set; }
     public GameObject GameBoard { get; private set; }
+    public GameData GameData;
+    public Dictionary<string, string[]> GamePieceData { get; private set; }
     void Start()
     {
         // //read go.json from Assets/_Games/
@@ -40,7 +44,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         //         JsonUtility.FromJson<GameData>(File.ReadAllText(file));
         //     }
         // }
-
+        GamePieceData = new Dictionary<string, string[]>();
     }
     public void DoStuff()
     {
@@ -78,10 +82,16 @@ public class GameImporter : MonoBehaviourPunCallbacks
         // // Debug.Log(gameData.snapGrid.countX);
         GameObject gameRoot = new GameObject("GameRoot");
         GameObject boardObj = new GameObject("GameBoard");
+        this.GameRoot = gameRoot;
+        this.GameBoard = boardObj;
         boardObj.AddComponent<GameController>();
         GameData gameData = new GameData(serializedGD);
+        GameData = gameData;
+        var psc = gameRoot.AddComponent<PieceSpawnController>();
+        psc.ButtonPrefab = ButtonPrefab;
+        psc.ScrollListPrefab = ScrollListPrefab;
         CreateGameBoard(gameData, boardObj, texData);
-        CreateGamePieces(gameData, gameRoot, gpNames, gpData);
+        FillGamePieceData(gameData, boardObj, gpNames, gpData);
         CreateSnapPoints(gameData, boardObj);
         //set gameboard inactive to avoid snappoints colliding with gamepieces
         boardObj.SetActive(false);
@@ -102,8 +112,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         ScaleDown(boardObj, 0.01f);
         // CheckForPlayers(gameRoot);
         AddToBoardSyncer(boardObj);
-        this.GameRoot = gameRoot;
-        this.GameBoard = boardObj;
+
     }
 
     private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
@@ -112,7 +121,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         GameObject gameTexture = GameObject.CreatePrimitive(PrimitiveType.Quad);
         gameTexture.transform.rotation = Quaternion.Euler(90, 0, 0);
         gameTexture.transform.localScale = new Vector3(gameData.width, gameData.height, 1);
-        gameTexture.transform.position = new Vector3(gameData.width / 2, 0.001f, gameData.height / 2);
+        gameTexture.transform.position = new Vector3(gameData.width / 2, 0.005f, gameData.height / 2);
         gameTexture.transform.parent = parentObject.transform;
         // create a new Texture and load the given texture from path
         Texture2D tex = new Texture2D(gameData.width, gameData.height, TextureFormat.RGBA32, false);
@@ -212,51 +221,15 @@ public class GameImporter : MonoBehaviourPunCallbacks
             }
         }
     }
-    private GameObject[] CreateGamePieces(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
+    private void FillGamePieceData(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
     {
         List<string> gpNamesList = new List<string>(gpNames);
         GameObject[] result = new GameObject[gameData.gamePieces.Length];
-        //parse gpData to text[][]
-        string[][] gpDataStrings = new string[gpData.Length][];
         for (int i = 0; i < gpData.Length; i++)
         {
-            gpDataStrings[i] = System.Text.Encoding.UTF8.GetString(gpData[i]).Split('\n');
+            GamePieceData.Add(gpNames[i], System.Text.Encoding.UTF8.GetString(gpData[i]).Split('\n'));
         }
-        // loop through the gamepieces
-        for (int i = 0; i < gameData.gamePieces.Length; i++)
-        {
-            GameObject piece = Instantiate(gamePiecePrefab);
-            piece.name = gameData.gamePieces[i].name;
-            string meshPath = gameData.gamePieces[i].path;
-            // GameObject obj = Resources.Load<GameObject>(gameData.gamePieces[i].path);
-            // GameObject obj = new GameObject();
-            ObjectLoader loader = piece.AddComponent<ObjectLoader>();
-            loader.Load(gpDataStrings[gpNamesList.IndexOf(meshPath)]);
-            float posOffset = 10 * GAMEPIECE_START_FACTOR;
-            piece.transform.position = new Vector3(-posOffset - (i / 10 * posOffset), 0, i % 10 * posOffset);
-            Material currentMat = piece.GetComponent<MeshRenderer>().material;
-            currentMat.color = ImporterHelper.ConvertColor(gameData.gamePieces[i].color);
-            currentMat.SetFloat("_Metallic", gameData.gamePieces[i].metallic);
-            currentMat.SetFloat("_Glossiness", gameData.gamePieces[i].smoothness);
-            Destroy(piece.GetComponent<BoxCollider>());
-            piece.AddComponent<BoxCollider>();
-            if (currentMat.color.a != 1)
-            {
-                currentMat.SetFloat("_Mode", 3);
-            }
-
-            // without this line the shader will only show the correct color until something changes
-            // with it, it seems to reload the variables and renders correctly
-            currentMat.shader = Shader.Find("Standard");
-            piece.transform.parent = parentObject.transform;
-            // Debug.Log(piece.GetComponent<MeshRenderer>().bounds);
-            // ImporterHelper.ScaleUp(piece, new Vector3(GAMEPIECE_START_FACTOR, GAMEPIECE_START_FACTOR, GAMEPIECE_START_FACTOR));
-            ImporterHelper.ScaleUp(piece, new Vector3(0.1f, 0.1f, 0.1f));
-            PhotonView pv = piece.AddComponent<PhotonView>();
-            pv.ViewID = 2501 + i;
-            result[i] = piece;
-        }
-        return result;
+        GameObject.FindObjectOfType<PieceSpawnController>().CreatePieceList(parentObject, gameData.gamePieces);
     }
 
     private IEnumerator TriggerGameImport(string gameDataPath, GameData gameData)
@@ -315,6 +288,16 @@ public class GameImporter : MonoBehaviourPunCallbacks
             ImportGame();
         }
     }
+
+    public GameObject SpawnGamePiece(int pieceID)
+    {
+        GameObject piece = PhotonNetwork.Instantiate(gamePiecePrefab.name, Vector3.zero, Quaternion.identity);
+        // Debug.Log("DEBUG: Spawning GamePiece " + pieceID + "  |  " + _gameData.gamePieces.Length);
+        piece.GetPhotonView().RPC("LoadGamePiece", RpcTarget.All, pieceID);
+        return piece;
+    }
+
+
     [PunRPC]
     public void SubscribeToDataEvents(int calcChunks)
     {

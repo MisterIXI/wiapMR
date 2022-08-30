@@ -79,11 +79,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8152425668735984561}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51964c27248e5a45a739fb03ffd3d92, type: 3}
+  m_Script: {fileID: 11500000, guid: c33327890befbf6449418c54865a9a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   snapPointPrefab: {fileID: 790646109668074858, guid: ad864931e9c538f4e8203aa26d31b45e, type: 3}
   gamePiecePrefab: {fileID: 8166055692710453082, guid: 9ffe82649f76421469e4a6b65eb4e422, type: 3}
+  buttonPrefab: {fileID: 3771337403192970871, guid: 074140493e183f8478699fcd35ea2932, type: 3}
 --- !u!114 &2179816527276086727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +101,8 @@ MonoBehaviour:
   PlayerHandPrefab: {fileID: 0}
   _player: {fileID: 0}
   _head: {fileID: 0}
+  HeadHelper: {fileID: 0}
+  BoardHelper: {fileID: 0}
 --- !u!114 &8638247554332790380
 MonoBehaviour:
   m_ObjectHideFlags: 0

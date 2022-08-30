@@ -7,6 +7,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     private GameObject board;
     private Collider ownCollider;
     private bool snapped;
+    private GameObject snappedTo;
     private SnapPoint potentialSnapPoint;
     private bool _isGrabbing = false;
 
@@ -91,7 +92,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
         // if (IsSnapped())
         // {
-        //     transform.position = this.transform.parent.transform.position;
+        //     transform.position = snappedTo.transform.position;
         // }
     }
 }
