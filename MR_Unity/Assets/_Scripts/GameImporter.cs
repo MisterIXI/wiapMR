@@ -117,7 +117,9 @@ public class GameImporter : MonoBehaviourPunCallbacks
         // tex.LoadRawTextureData(texData);
         tex.LoadImage(texData);
         tex.Apply();
-        // Debug.Log(tex);
+        // string testString = string.Join(",", texData);
+        // Deb#ug.Log(testString.Length + "|" + (testString.Length-2)); // output 792485|792483
+        // Debug.Log("..." + testString.Substring(testString.Length-100, 100));
         // tex.filterMode = FilterMode.Point;
         // Debug.Log("Path:" + GAMEBOARD_PATH + gameData.texture + " | tex: " + tex);
         // set the shader to texture to avoid a blurry endresult
