@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 {
@@ -9,13 +10,13 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     private bool snapped;
     private GameObject snappedTo;
     private SnapPoint potentialSnapPoint;
-    private bool _isGrabbing = false;
+    public bool IsGrabbing = false;
 
 
     void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + _isGrabbing);
-        if (collider.gameObject.tag == "SnapPoint" && _isGrabbing)
+        Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + IsGrabbing);
+        if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
         {
             Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
             if (potentialSnapPoint != null)
@@ -31,7 +32,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     void OnTriggerExit(Collider collider)
     {
         // Debug.Log("Collision with SnapPoint (Leave)");
-        if (collider.gameObject.tag == "SnapPoint" && _isGrabbing)
+        if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
         {
             if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
             {
@@ -48,22 +49,33 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 
     public void OnInputDown(InputEventData eventData)
     {
-        if (IsSnapped())
+        if (photonView.IsMine)
         {
-            photonView.RPC("UnSnap", RpcTarget.All);
+
+            if (IsSnapped())
+            {
+                photonView.RPC("UnSnap", RpcTarget.All);
+            }
+            SnapPoint.HolographicPreviewAll(gameObject);
+            IsGrabbing = true;
         }
-        SnapPoint.HolographicPreviewAll(gameObject);
-        _isGrabbing = true;
+        else
+        {
+            photonView.RequestOwnership();
+        }
     }
     public void OnInputUp(InputEventData eventData)
     {
-        if (!snapped && potentialSnapPoint != null)
+        if (photonView.IsMine)
         {
-            photonView.RPC("SnapTo", RpcTarget.All);
-            transform.position = potentialSnapPoint.transform.position;
+            if (!snapped && potentialSnapPoint != null)
+            {
+                photonView.RPC("SnapTo", RpcTarget.All);
+                transform.position = potentialSnapPoint.transform.position;
+            }
+            SnapPoint.StopHolographicPreviewAll();
+            IsGrabbing = false;
         }
-        SnapPoint.StopHolographicPreviewAll();
-        _isGrabbing = false;
     }
 
     [PunRPC]
@@ -85,6 +97,10 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
         this.snapped = false;
         board = GameObject.FindGameObjectWithTag("GameBoard");
+        if (photonView.IsMine)
+        {
+            GetComponent<ObjectManipulator>().enabled = true;
+        }
     }
 
     // Update is called once per frame

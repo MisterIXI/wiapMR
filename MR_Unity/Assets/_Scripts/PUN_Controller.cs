@@ -99,12 +99,14 @@ namespace WiapMR.PUN
 
         public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
         {
+            Debug.Log("Ownership has been requested for: " + targetView.ViewID + " by: " + requestingPlayer.NickName);
             if (targetView.IsMine)
             {
+                Debug.Log("I own this object");
                 //only let the OwnershipRequest go through when the object is not being grabbed
-                if (targetView.gameObject.tag == "Cube")
+                if (targetView.gameObject.tag == "GamePiece")
                 {
-                    if (!targetView.gameObject.GetComponent<CubeController>().isGrabbing)
+                    if (!targetView.gameObject.GetComponent<PlaceableObject>().IsGrabbing)
                     {
                         targetView.TransferOwnership(requestingPlayer);
                         Debug.Log("Ownership Transfer Requested on " + targetView.gameObject + " by " + requestingPlayer);
@@ -119,17 +121,17 @@ namespace WiapMR.PUN
 
         public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
         {
-            if (previousOwner == PhotonNetwork.LocalPlayer && targetView.gameObject.tag == "Cube")
+            if (previousOwner == PhotonNetwork.LocalPlayer && targetView.gameObject.tag == "GamePiece")
             {
-                //stop the cube from being moved by local player if they are no longer the owner
+                //stop the GamePiece from being moved by local player if they are no longer the owner
                 targetView.gameObject.GetComponent<ObjectManipulator>().enabled = false;
                 Debug.Log("Disabled ObjectManipulator on " + targetView.gameObject + " by " + previousOwner);
                 // targetView.gameObject.GetComponent<ObjectManipulator>().ManipulationType = 0;
             }
-            if (targetView.IsMine && targetView.gameObject.tag == "Cube")
+            if (targetView.IsMine && targetView.gameObject.tag == "GamePiece")
             {
                 targetView.gameObject.GetComponent<ObjectManipulator>().enabled = true;
-                Debug.Log("Enabled Cube Manipulator");
+                Debug.Log("Enabled GamePiece Manipulator");
                 // targetView.gameObject.GetComponent<ObjectManipulator>().ManipulationType = ManipulationHandFlags.OneHanded | ManipulationHandFlags.TwoHanded;
             }
             Debug.Log("Ownership Transfered from " + previousOwner + " to " + targetView.Owner);
