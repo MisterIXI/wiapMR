@@ -28,6 +28,10 @@ namespace WiapMR.PUN
         {
             Debug.Log("Joined Room");
             GetComponent<PlayerManager>().Initialize();
+            GetComponent<PlayerManager>().HeadHelper.GetComponent<SyncPos>()
+                .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
+            GetComponent<PlayerManager>().BoardHelper.GetComponent<SyncPos>()
+                .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
             // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
             if (!PhotonNetwork.IsMasterClient)
             {
