@@ -71,7 +71,7 @@ public class GamePieceLoader : MonoBehaviour
             Destroy(coll);
         }
         gameObject.AddComponent<BoxCollider>();
-        transform.localScale = new Vector3(6, 6, 6);
+        transform.localScale = new Vector3(2, 2, 2);
         // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
     }
