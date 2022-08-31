@@ -38,9 +38,10 @@ public class GamePieceLoader : MonoBehaviour
         // without this line the shader will only show the correct color until something changes
         // with it, it seems to reload the variables and renders correctly
         currentMat.shader = Shader.Find("Standard");
-        Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
-        var newScale = 7f / gameObject.GetComponent<MeshRenderer>().bounds.max.magnitude;
-        transform.localScale = new Vector3(newScale, newScale, newScale);
-        Debug.Log("piece Bounds after: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
+        transform.localScale = transform.localScale * 1f;
+        // Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
+        // var newScale = 7f / gameObject.GetComponent<MeshRenderer>().bounds.max.magnitude;
+        // transform.localScale = new Vector3(newScale, newScale, newScale);
+        // Debug.Log("piece Bounds after: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
     }
 }
