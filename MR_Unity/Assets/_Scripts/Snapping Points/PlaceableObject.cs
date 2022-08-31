@@ -15,10 +15,10 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
 
     void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + IsGrabbing);
+        // Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + IsGrabbing);
         if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
         {
-            Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
+            // Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
             if (potentialSnapPoint != null)
             {
                 potentialSnapPoint.UnhighlightHologram();

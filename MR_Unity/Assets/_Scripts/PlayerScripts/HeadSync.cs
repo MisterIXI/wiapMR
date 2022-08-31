@@ -27,7 +27,7 @@ namespace WiapMR.PUN
                 this.isPlayer = isPlayer;
                 this._headHelper = headHelper;
                 this._boardHelper = boardHelper;
-                Debug.Log("Head alive! | " + (isPlayer ? "Player" : "Other"));
+                // Debug.Log("Head alive! | " + (isPlayer ? "Player" : "Other"));
                 cam = Camera.main;
                 pv = _headHelper.GetComponent<PhotonView>();
                 GameImporter gi = GameObject.FindObjectOfType<GameImporter>();

@@ -8,86 +8,86 @@
         {
             "name": "Bishop Black",
             "path": "Rook.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "King Black",
             "path": "King.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Knight Black",
             "path": "Knight.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Pawn Black",
             "path": "Pawn.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Queen Black",
             "path": "Queen.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Rook Black",
             "path": "Rook.obj",
-            "color": "0,0,0,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "color": "100,100,100,1",
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Bishop White",
             "path": "Rook.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "King White",
             "path": "King.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Knight White",
             "path": "Knight.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Pawn White",
             "path": "Pawn.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Queen White",
             "path": "Queen.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         },
         {
             "name": "Rook White",
             "path": "Rook.obj",
             "color": "255,255,255,1",
-            "metallic": "0",
-            "smoothness": "0"
+            "metallic": "1",
+            "smoothness": "0.5"
         }
     ],
     "snapPoints": [],

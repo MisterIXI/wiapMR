@@ -26,13 +26,13 @@ public class StartPlate : MonoBehaviour
     }
     public void OnJoinRoom()
     {
-        Debug.Log("OnJoinRoom called");
+        // Debug.Log("OnJoinRoom called");
         if (Application.platform != RuntimePlatform.WSAPlayerARM)
         {
-            Debug.Log("OnJoinRoom called on Desktop");
+            // Debug.Log("OnJoinRoom called on Desktop");
             if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
             {
-                Debug.Log("OnJoinRoom called on Desktop and more than 1 player");
+                // Debug.Log("OnJoinRoom called on Desktop and more than 1 player");
                 EnableButtons();
             }
         }
