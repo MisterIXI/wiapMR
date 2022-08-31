@@ -40,8 +40,9 @@ public class GamePieceLoader : MonoBehaviour
         currentMat.shader = Shader.Find("Standard");
         transform.localScale = transform.localScale * 1f;
         // Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
-        // var newScale = 7f / gameObject.GetComponent<MeshRenderer>().bounds.max.magnitude;
-        // transform.localScale = new Vector3(newScale, newScale, newScale);
+        var boxSize = gameObject.GetComponent<BoxCollider>().size;
+        var scaleFactor = 3f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
+        transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         // Debug.Log("piece Bounds after: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
     }
 }
