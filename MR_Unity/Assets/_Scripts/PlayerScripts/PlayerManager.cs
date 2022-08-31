@@ -42,5 +42,8 @@ public class PlayerManager : MonoBehaviour
         // boardTracker object needs to be set after GameImporter is done
     }
 
-    
+    [PunRPC]
+    public void DisableStartMenu(){
+        GameObject.FindObjectOfType<StartPlate>().gameObject.SetActive(false);
+    }
 }

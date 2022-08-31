@@ -46,7 +46,8 @@ public class GameImporter : MonoBehaviourPunCallbacks
         // }
         GamePieceData = new Dictionary<string, string[]>();
     }
-    public void DoStuff()
+
+    public void SpawnGo()
     {
         if (_waitingForData != 0)
         {
@@ -54,8 +55,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         }
         GAME_DATA_PATH = Application.dataPath + "/_Games/";
         string path = Application.dataPath + "/_Games/Go/";
-        // GameData gamedata = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
-        try
+         try
         {
             GameData gameData = ImportGameData(path + "Go.json");
             StartCoroutine(TriggerGameImport(path, gameData));
@@ -66,6 +66,27 @@ public class GameImporter : MonoBehaviourPunCallbacks
             Debug.Log(e.Message);
         }
     }
+
+    public void SpawnChess()
+    {
+        if (_waitingForData != 0)
+        {
+            throw new Exception("Still waiting for data");
+        }
+        GAME_DATA_PATH = Application.dataPath + "/_Games/";
+        string path = Application.dataPath + "/_Games/Chess/";
+         try
+        {
+            GameData gameData = ImportGameData(path + "Chess.json");
+            StartCoroutine(TriggerGameImport(path, gameData));
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log("Game data invalid or not found!");
+            Debug.Log(e.Message);
+        }
+    }
+
     [PunRPC]
     public void ImportGame()
     {
@@ -95,7 +116,7 @@ public class GameImporter : MonoBehaviourPunCallbacks
         CreateSnapPoints(gameData, boardObj);
         //set gameboard inactive to avoid snappoints colliding with gamepieces
         boardObj.SetActive(false);
-        boardObj.transform.localScale = Vector3.one * 0.1f;
+        boardObj.transform.localScale = Vector3.one * 1f;
         boardObj.SetActive(true);
         BoxCollider cubeColl = boardObj.GetComponentInChildren<BoxCollider>();
         BoxCollider rBC = boardObj.AddComponent<BoxCollider>();

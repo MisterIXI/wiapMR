@@ -6,14 +6,14 @@
     "texture": "Go.png",
     "gamePieces": [
         {
-            "name": "GoWhite",
+            "name": "White Go Piece",
             "path": "GoStone.obj",
             "color": "255,255,255,1",
             "metallic": "1",
             "smoothness": "0.5"
         },
         {
-            "name": "GoBlack",
+            "name": "Black Go Piece",
             "path": "GoStone.obj",
             "color": "0,0,0,1",
             "metallic": "1",

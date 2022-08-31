@@ -71,7 +71,7 @@ public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
             if (!snapped && potentialSnapPoint != null)
             {
                 photonView.RPC("SnapTo", RpcTarget.All);
-                transform.position = potentialSnapPoint.transform.position;
+                // transform.position = potentialSnapPoint.transform.position;
             }
             SnapPoint.StopHolographicPreviewAll();
             IsGrabbing = false;

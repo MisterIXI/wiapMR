@@ -87,6 +87,10 @@ namespace WiapMR.PUN
                                 }
                             }
                         }
+                        if(_headHelper != null){
+                            transform.position = _headHelper.transform.position;
+                            transform.rotation = _headHelper.transform.rotation;
+                        }
                     }
                 }
             }

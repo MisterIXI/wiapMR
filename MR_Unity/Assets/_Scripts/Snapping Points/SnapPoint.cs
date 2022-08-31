@@ -39,7 +39,7 @@ public class SnapPoint : MonoBehaviour
         // Debug.Log("HolographicPreviewStart | Material: " + material);
         gameObject.SetActive(true);
         material.color = SP_COLOR_NORMAL;
-        meshFilter.mesh = obj.GetComponent<MeshFilter>().mesh;
+        // meshFilter.mesh = obj.GetComponent<MeshFilter>().mesh;
     }
 
     public void StopHolographicPreview()

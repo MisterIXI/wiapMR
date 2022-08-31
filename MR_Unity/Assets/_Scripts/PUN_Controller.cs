@@ -32,16 +32,15 @@ namespace WiapMR.PUN
                 .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
             GetComponent<PlayerManager>().BoardHelper.GetComponent<SyncPos>()
                 .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
+            GameObject.FindObjectOfType<StartPlate>().OnJoinRoom();
             // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
             if (!PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Is not master client");
-                gameObject.GetComponent<GameImporter>().DoStuff();
             }
             else
             {
-                // gameObject.GetComponent<GameImporter>().DoStuff();
-                Debug.Log("Is master client, not spawning board");
+                Debug.Log("Is master client");
                 // gameObject.GetComponent<GameImporter>().CheckForPlayers(gameObject.GetComponent<GameImporter>().GameRoot);
             }
 
@@ -55,6 +54,7 @@ namespace WiapMR.PUN
                 .photonView.RPC("SpawnHead", newPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
             GetComponent<PlayerManager>().BoardHelper.GetComponent<SyncPos>()
                 .photonView.RPC("SpawnHead", newPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
+            GameObject.FindObjectOfType<StartPlate>().EnableButtons();
         }
         public override void OnLeftRoom()
         {

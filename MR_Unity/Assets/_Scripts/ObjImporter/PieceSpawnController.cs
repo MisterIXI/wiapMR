@@ -42,7 +42,7 @@ public class PieceSpawnController : MonoBehaviour
             newButton.transform.parent = buttonParent;
             newButton.transform.Rotate(newButton.transform.right, 90);
             newButton.transform.localScale = new Vector3(7.5f, 7.5f, 7.5f);
-            newButton.GetComponentInChildren<TMPro.TextMeshPro>().text = pieces[i].name + ">" + i;
+            newButton.GetComponentInChildren<TMPro.TextMeshPro>().text = pieces[i].name;//+ ">" + i;
             var buttonScript = newButton.GetComponent<ButtonConfigHelper>();
             int funcID = i;
             // Debug.Log("Iteration of i: " + funcID);

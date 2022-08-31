@@ -143,8 +143,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1726218797364320542}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.125, y: -1.221, z: -0.05}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.125, y: -1.221, z: -0.012}
+  m_LocalScale: {x: 1, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1393240600059749739}
@@ -376,8 +376,8 @@ MonoBehaviour:
   frontTouchDistance: 0.005
   scrollDirection: 0
   useOnPreRender: 0
-  velocityMultiplier: 0.008
-  velocityDampen: 0.9
+  velocityMultiplier: 0.00931
+  velocityDampen: 0.42
   typeOfVelocity: 0
   paginationCurve:
     serializedVersion: 2
@@ -409,7 +409,7 @@ MonoBehaviour:
   cellWidth: 0.25
   cellHeight: 0.4
   cellDepth: 0.25
-  bounceMultiplier: 0.1
+  bounceMultiplier: 0.31
   OnClick:
     m_PersistentCalls:
       m_Calls: []
