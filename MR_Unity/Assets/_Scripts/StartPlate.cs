@@ -20,7 +20,7 @@ public class StartPlate : MonoBehaviour
         }
         else
         {
-            transform.Translate(new Vector3(0, 1, 0));
+            transform.Translate(new Vector3(0, 0.7f, 0));
             //Desktop code
             InfoText.text = "Waiting for other player...";
         }

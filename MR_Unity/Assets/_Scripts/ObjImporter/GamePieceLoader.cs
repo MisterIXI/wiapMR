@@ -13,6 +13,7 @@ public class GamePieceLoader : MonoBehaviour
         GameImporter gi = GameObject.FindObjectOfType<GameImporter>();
         GameData.GamePiece pieceData = gi.GameData.gamePieces[pieceID];
         string[] meshData = gi.GamePieceData[pieceData.path];
+        transform.parent = gi.GameBoard.transform;
 
         ObjectLoader loader = gameObject.AddComponent<ObjectLoader>();
         loader.Load(meshData);
@@ -34,7 +35,6 @@ public class GamePieceLoader : MonoBehaviour
         var startPos = startPosTransform.position - startPosTransform.forward * 0.5f;
         transform.position = startPos;
         gameObject.name = pieceData.name;
-        transform.parent = gi.GameBoard.transform;
         // without this line the shader will only show the correct color until something changes
         // with it, it seems to reload the variables and renders correctly
         currentMat.shader = Shader.Find("Standard");
