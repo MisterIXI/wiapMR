@@ -42,7 +42,9 @@ public class GamePieceLoader : MonoBehaviour
         // Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
         var boxSize = gameObject.GetComponent<BoxCollider>().size;
         var scaleFactor = 3f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
+        Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
         transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
         // Debug.Log("piece Bounds after: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
     }
 }
