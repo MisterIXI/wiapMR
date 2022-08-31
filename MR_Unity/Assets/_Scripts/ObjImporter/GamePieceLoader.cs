@@ -30,7 +30,7 @@ public class GamePieceLoader : MonoBehaviour
         {
             currentMat.SetFloat("_Mode", 3);
         }
-        ImporterHelper.ScaleUp(gameObject, new Vector3(0.1f, 0.1f, 0.1f));
+        // ImporterHelper.ScaleUp(gameObject, new Vector3(0.1f, 0.1f, 0.1f));
         var startPosTransform = GameObject.FindObjectOfType<ScrollingObjectCollection>().GetComponentInChildren<ClippingBox>().transform;
         var startPos = startPosTransform.position - startPosTransform.forward * 0.5f;
         transform.position = startPos;
@@ -38,7 +38,7 @@ public class GamePieceLoader : MonoBehaviour
         // without this line the shader will only show the correct color until something changes
         // with it, it seems to reload the variables and renders correctly
         currentMat.shader = Shader.Find("Standard");
-        transform.localScale = transform.localScale * 1f;
+        // transform.localScale = transform.localScale * 1f;
         // Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
         var boxSize = gameObject.GetComponent<BoxCollider>().size;
         var scaleFactor = 5f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
@@ -77,7 +77,7 @@ public class GamePieceLoader : MonoBehaviour
     }
     IEnumerator testDebug()
     {
-        bool run = true;
+        bool run = false;
         while (run)
         {
             yield return new WaitForSeconds(0.5f);
@@ -91,7 +91,7 @@ public class GamePieceLoader : MonoBehaviour
             {
                 var scaleFactor = 5f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
                 Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
-                transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+                // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             }
         }
     }
