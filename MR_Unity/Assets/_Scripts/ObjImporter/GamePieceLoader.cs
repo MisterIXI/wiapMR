@@ -53,7 +53,7 @@ public class GamePieceLoader : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         var boxSize = gameObject.GetComponent<BoxCollider>().size;
-        var scaleFactor = 5f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
+        var scaleFactor = 18f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
         Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
         transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
