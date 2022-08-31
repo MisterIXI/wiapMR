@@ -1,0 +1,104 @@
+{
+    "version": 1,
+    "name": "Chess",
+    "height": 200,
+    "width": 200,
+    "texture": "Chessboard.png",
+    "gamePieces": [
+        {
+            "name": "Bishop Black",
+            "path": "Rook.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "King Black",
+            "path": "King.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Knight Black",
+            "path": "Knight.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Pawn Black",
+            "path": "Pawn.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Queen Black",
+            "path": "Queen.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Rook Black",
+            "path": "Rook.obj",
+            "color": "0,0,0,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Bishop White",
+            "path": "Rook.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "King White",
+            "path": "King.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Knight White",
+            "path": "Knight.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Pawn White",
+            "path": "Pawn.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Queen White",
+            "path": "Queen.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        },
+        {
+            "name": "Rook White",
+            "path": "Rook.obj",
+            "color": "255,255,255,1",
+            "metallic": "0",
+            "smoothness": "0"
+        }
+    ],
+    "snapPoints": [],
+    "snapGrids": [
+        {
+            "startX": 12.5,
+            "startZ": 12.5,
+            "endX": 187.5,
+            "endZ": 187.5,
+            "countX": 8,
+            "countZ": 8
+        }
+    ]
+}
