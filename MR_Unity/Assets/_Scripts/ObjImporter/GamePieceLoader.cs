@@ -53,7 +53,7 @@ public class GamePieceLoader : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         var boxSize = gameObject.GetComponent<BoxCollider>().size;
-        var scaleFactor = 18f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
+        var scaleFactor = 11f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
         Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
         var myMesh = GetComponent<MeshFilter>().mesh;
         var baseVertices = myMesh.vertices;
@@ -71,7 +71,7 @@ public class GamePieceLoader : MonoBehaviour
             Destroy(coll);
         }
         gameObject.AddComponent<BoxCollider>();
-
+        transform.localScale = new Vector3(6, 6, 6);
         // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
     }
