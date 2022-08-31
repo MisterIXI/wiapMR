@@ -55,7 +55,24 @@ public class GamePieceLoader : MonoBehaviour
         var boxSize = gameObject.GetComponent<BoxCollider>().size;
         var scaleFactor = 18f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
         Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
-        transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        var myMesh = GetComponent<MeshFilter>().mesh;
+        var baseVertices = myMesh.vertices;
+        var vertices = new Vector3[baseVertices.Length];
+        for (int i = 0; i < baseVertices.Length; i++)
+        {
+            vertices[i] = baseVertices[i] * scaleFactor;
+        }
+        myMesh.vertices = vertices;
+        myMesh.RecalculateBounds();
+
+        var colliders = GetComponents<BoxCollider>();
+        foreach (var coll in colliders)
+        {
+            Destroy(coll);
+        }
+        gameObject.AddComponent<BoxCollider>();
+
+        // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
     }
     IEnumerator testDebug()
