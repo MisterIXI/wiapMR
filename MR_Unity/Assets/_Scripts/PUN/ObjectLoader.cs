@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace WiapMR.PUN
 {
+    /// <summary>
+    /// Uses the FileReader class to lazyload a mesh into a gameobject.
+    /// Expects meshdata to be presented as a string array.
+    /// Taken from: https://gist.github.com/supachailllpay/893cd5b0c31dff3bb025
+    /// </summary>
     public class ObjectLoader : MonoBehaviour
     {
         private bool _isLoaded;

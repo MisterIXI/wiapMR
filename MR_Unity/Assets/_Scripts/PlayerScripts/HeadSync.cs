@@ -5,6 +5,10 @@ using WiapMR.PUN;
 
 namespace WiapMR.PlayerScripts
 {
+    /// <summary>
+    /// This class is used to sync the head position of the player depending on the board location & rotation.
+    /// The calculation is sophisticated since it needs to take lokal board and remote board position & rotation into account.
+    /// </summary>
     public class HeadSync : MonoBehaviour
     {
         private Camera _cam;

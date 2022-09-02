@@ -49,11 +49,14 @@ namespace WiapMR.GameScripts
             return _snapped;
         }
 
+        /// <summary>
+        /// When receiving MRTK input trigger preview hologram
+        /// </summary>
+        /// <param name="eventData"></param>
         public void OnInputDown(InputEventData eventData)
         {
             if (photonView.IsMine)
             {
-
                 if (IsSnapped())
                 {
                     photonView.RPC("UnSnap", RpcTarget.All);
@@ -66,6 +69,10 @@ namespace WiapMR.GameScripts
                 photonView.RequestOwnership();
             }
         }
+        /// <summary>
+        /// When losing MRTK input stop preview hologram
+        /// </summary>
+        /// <param name="eventData"></param>
         public void OnInputUp(InputEventData eventData)
         {
             if (photonView.IsMine)

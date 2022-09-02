@@ -4,6 +4,9 @@ using WiapMR.PlayerScripts;
 
 namespace WiapMR.PUN
 {
+    /// <summary>
+    /// Modular script to sync position of an object for the helper objects.
+    /// </summary>
     public class SyncPos : MonoBehaviourPunCallbacks
     {
         public GameObject OtherToSync;
@@ -25,6 +28,10 @@ namespace WiapMR.PUN
             }
         }
 
+        /// <summary>
+        /// Sets the correct name to the gameobject.
+        /// </summary>
+        /// <param name="name">Name to be given</param>
         [PunRPC]
         public void SpreadName(string name)
         {
@@ -41,6 +48,10 @@ namespace WiapMR.PUN
             }
         }
 
+        /// <summary>
+        /// Spawns a new Head object to display other players head.
+        /// </summary>
+        /// <param name="playerID">ID of Player to be displayed</param>
         [PunRPC]
         public void SpawnHead(int playerID)
         {

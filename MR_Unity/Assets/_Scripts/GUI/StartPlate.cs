@@ -7,6 +7,11 @@ using WiapMR.PlayerScripts;
 
 namespace WiapMR.GUI
 {
+    /// <summary>
+    /// This class handles the start plate of the game. The start menu so to speak.
+    /// Since we can't access the file system on HoloLens there is a platform check disabling spawning there.
+    /// The actual logic of spawning is over in GameImporter.cs
+    /// </summary>
     public class StartPlate : MonoBehaviour
     {
         public TextMeshPro InfoText;

@@ -4,6 +4,9 @@ using TMPro;
 namespace WiapMR.GUI
 {
     // taken from http://answers.unity.com/answers/927240/view.html
+    /// <summary>
+    /// This class with modified code taken from unityanswers puts the unity console into the game. Useful for debugging and similar.
+    /// </summary>
     public class ConsoleToGUI : MonoBehaviour
     {
         public TextMeshPro TextMesh;

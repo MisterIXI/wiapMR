@@ -2,6 +2,10 @@ using System.IO;
 
 namespace WiapMR.GameScripts
 {
+    /// <summary>
+    /// Contains all imported game data.
+    /// With this class, the game data can be serialized and sent to other players.
+    /// </summary>
     public class GameData
     {
         public string Name;
@@ -57,6 +61,10 @@ namespace WiapMR.GameScripts
             SnapGrids = new SnapGrid[0];
         }
 
+        /// <summary>
+        /// Converts the game data to a byte array.
+        /// </summary>
+        /// <returns>The converted gameData as byte[]</returns>
         public byte[] ToByteArray()
         {
             // use a memorystream to save everything in one byte array
@@ -103,7 +111,10 @@ namespace WiapMR.GameScripts
             }
         }
 
-
+        /// <summary>
+        /// Converts a byte array to a game data object.
+        /// </summary>
+        /// <param name="data">the binary data received</param>
         public GameData(byte[] data)
         {
             // use a memorystream to load everything from the byte array

@@ -10,8 +10,17 @@ namespace WiapMR.PUN
         private const int Chunksize = 450000;
         private Dictionary<string, int> _dataProgress = default;
         private Dictionary<string, byte[]> _dataDictionary = default;
+
+        /// <summary>
+        /// Event to subscribe to to be notified of received data.
+        /// </summary>
         public event Action<string, byte[]> OnDataReceived = delegate { };
 
+        /// <summary>
+        /// Sends data to all players.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="tag"></param>
         public void SendData(byte[] data, string tag)
         {
             PhotonView photonView = GetComponent<PhotonView>();
@@ -31,6 +40,14 @@ namespace WiapMR.PUN
             }
         }
 
+        /// <summary>
+        /// Receives Data and triggers the event on completion.
+        /// </summary>
+        /// <param name="step">The index of the sent chunk</param>
+        /// <param name="totalSteps">The total packets of the given tag</param>
+        /// <param name="arrSize">The size of the original array</param>
+        /// <param name="tag">The name of data being sent (including ID suffix)</param>
+        /// <param name="data">The actual byte data</param>
         [PunRPC]
         public void ReceiveData(int step, int totalSteps, int arrSize, string tag, byte[] data)
         {

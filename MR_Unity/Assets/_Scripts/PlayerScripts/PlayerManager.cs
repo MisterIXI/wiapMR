@@ -5,6 +5,9 @@ using WiapMR.GUI;
 
 namespace WiapMR.PlayerScripts
 {
+    /// <summary>
+    /// This class is responsible for spawning the helper sync objects. With those we can sync the head and the board position & rotation to other players.
+    /// </summary>
     public class PlayerManager : MonoBehaviour
     {
         public GameObject PlayerHeadPrefab;

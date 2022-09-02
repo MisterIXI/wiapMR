@@ -8,6 +8,9 @@ using WiapMR.GameScripts;
 
 namespace WiapMR.PUN
 {
+    /// <summary>
+    /// Handles everything around the Photon Network like Connection, Ownership, ...
+    /// </summary>
     public class PUN_Controller : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
     {
         void Start()
@@ -23,6 +26,9 @@ namespace WiapMR.PUN
             PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 4 }, null);
         }
 
+        /// <summary>
+        /// Spawns player head objects on room join
+        /// </summary>
         public override void OnJoinedRoom()
         {
             Debug.Log("Joined Room");
@@ -32,7 +38,6 @@ namespace WiapMR.PUN
             GetComponent<PlayerManager>().BoardHelper.GetComponent<SyncPos>()
                 .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
             GameObject.FindObjectOfType<StartPlate>().OnJoinRoom();
-            // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
             // GameObject.FindObjectOfType<StartPlate>().ChessClick();
             if (!PhotonNetwork.IsMasterClient)
             {
@@ -44,6 +49,10 @@ namespace WiapMR.PUN
             }
         }
 
+        /// <summary>
+        /// Triggers the RPC functions normally called on join to other clients. This way they are in a correct state.
+        /// </summary>
+        /// <param name="newPlayer"></param>
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             GetComponent<PlayerManager>().HeadHelper.GetComponent<SyncPos>()
@@ -56,49 +65,24 @@ namespace WiapMR.PUN
         {
             Debug.Log("Left Room :(");
         }
-        [PunRPC]
-        public void RPC_Test(string message, int[] textureSize, byte[] texture, byte[][] models)
-        {
-            Debug.Log(message);
-            Texture2D tex = new Texture2D(textureSize[0], textureSize[1]);
-            tex.LoadRawTextureData(texture);
-            Debug.Log(tex.width);
-            // print all models
-            for (int i = 0; i < models.Length; i++)
-            {
-                Debug.Log("Top level: " + models[i].Length);
-                for (int j = 0; j < models[i].Length; j++)
-                {
-                    Debug.Log(models[i][j]);
-                }
-            }
-        }
 
-        [PunRPC]
-        public void MasterSend()
-        {
-            Texture2D texture = new Texture2D(3, 3);
-            Debug.Log("Master: " + texture.width);
-            byte[][] bArr = new byte[][]{
-                new byte[]{1,2,3},
-                new byte[]{4,5,6},
-                new byte[]{7,8,9}
-            };
-            texture.GetRawTextureData();
-            this.photonView.RPC("RPC_Test", RpcTarget.All, "MasterSend", new int[] { texture.width, texture.height }, texture.GetRawTextureData(), bArr);
-        }
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             base.OnJoinRoomFailed(returnCode, message);
             Debug.Log("Join Room Failed returnCode: " + returnCode + " message: " + message);
         }
 
+        /// <summary>
+        /// Handles Ownership requests for photonviews this client owns.
+        /// </summary>
+        /// <param name="targetView"></param>
+        /// <param name="requestingPlayer"></param>
         public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
         {
             Debug.Log("Ownership has been requested for: " + targetView.ViewID + " by: " + requestingPlayer.NickName);
             if (targetView.IsMine)
             {
-                Debug.Log("I own this object");
+                // Debug.Log("I own this object");
                 //only let the OwnershipRequest go through when the object is not being grabbed
                 if (targetView.gameObject.tag == "GamePiece")
                 {
@@ -115,6 +99,11 @@ namespace WiapMR.PUN
             }
         }
 
+        /// <summary>
+        /// Handles enabling/disabling handling of gamePieces when ownership is lost or gained.
+        /// </summary>
+        /// <param name="targetView"></param>
+        /// <param name="previousOwner"></param>
         public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
         {
             if (previousOwner == PhotonNetwork.LocalPlayer && targetView.gameObject.tag == "GamePiece")

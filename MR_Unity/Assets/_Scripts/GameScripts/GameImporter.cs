@@ -34,6 +34,10 @@ namespace WiapMR.GameScripts
             GamePieceData = new Dictionary<string, string[]>();
         }
 
+        /// <summary>
+        /// Spawns Go board and pieces on the board (with a hardcoded path)
+        /// </summary>
+        /// <exception cref="Exception">When the Import fails</exception>
         public void SpawnGo()
         {
             if (_waitingForData != 0)
@@ -53,6 +57,10 @@ namespace WiapMR.GameScripts
             }
         }
 
+        /// <summary>
+        /// Spawns Chess board and pieces on the board (with a hardcoded path)
+        /// </summary>
+        /// <exception cref="Exception">When the Import fails</exception>
         public void SpawnChess()
         {
             if (_waitingForData != 0)
@@ -73,6 +81,9 @@ namespace WiapMR.GameScripts
             }
         }
 
+        /// <summary>
+        /// When the gameData is loaded, this function is called to spawn the gameboard and pieces
+        /// </summary>
         [PunRPC]
         public void ImportGame()
         {
@@ -120,6 +131,13 @@ namespace WiapMR.GameScripts
             AddToBoardSyncer(boardObj);
         }
 
+        /// <summary>
+        /// Helper function to create the gameboard from given data.
+        /// This includes the texture and base cube
+        /// </summary>
+        /// <param name="gameData">The complete gameData</param>
+        /// <param name="parentObject">The gameroot which parents the newly created board</param>
+        /// <param name="texData">The raw binary data received for the texture</param>
         private void CreateGameBoard(GameData gameData, GameObject parentObject, byte[] texData)
         {
             // create Board texture
@@ -147,6 +165,12 @@ namespace WiapMR.GameScripts
             game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
         }
 
+        /// <summary>
+        /// Helper function to create the snap points from given data.
+        /// It both does the creation of the snap points and the creation of the snap point grids
+        /// </summary>
+        /// <param name="gameData">The complete gameData</param>
+        /// <param name="parentObject">The gameroot which parents the newly created snappoints</param>
         private void CreateSnapPoints(GameData gameData, GameObject parentObject)
         {
             // loop through the custom snapoints
@@ -166,7 +190,6 @@ namespace WiapMR.GameScripts
                 stepSizeX /= (gameData.SnapGrids[i].CountX - 1) != 0 ? gameData.SnapGrids[i].CountX - 1 : 1;
                 stepSizeY /= (gameData.SnapGrids[i].CountY - 1) != 0 ? gameData.SnapGrids[i].CountY - 1 : 1;
                 stepSizeZ /= (gameData.SnapGrids[i].CountZ - 1) != 0 ? gameData.SnapGrids[i].CountZ - 1 : 1;
-
                 // loop through countx, county, countz
                 for (int x = 0; x < gameData.SnapGrids[i].CountX; x++)
                 {
@@ -187,6 +210,10 @@ namespace WiapMR.GameScripts
             }
         }
 
+        /// <summary>
+        /// Initialize all SyncPos scripts with the newly created board
+        /// </summary>
+        /// <param name="board">The newly created gameboard</param>
         public void AddToBoardSyncer(GameObject board)
         {
             SyncPos[] syncObjs = GameObject.FindObjectsOfType<SyncPos>();
@@ -198,6 +225,15 @@ namespace WiapMR.GameScripts
                 }
             }
         }
+
+        /// <summary>
+        /// Create list of all loaded gamePieces for later use.
+        /// Also call Method on PieceSpawnController to create the scrollable button list.
+        /// </summary>
+        /// <param name="gameData">The complete gameData</param>
+        /// <param name="parentObject">The gameroot object to parent the scrollable list to</param>
+        /// <param name="gpNames">The name of gamepieces to be matched to the according data</param>
+        /// <param name="gpData">The data of gamepiece meshes for later spawning</param>
         private void FillGamePieceData(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
         {
             for (int i = 0; i < gpData.Length; i++)
@@ -207,6 +243,11 @@ namespace WiapMR.GameScripts
             GameObject.FindObjectOfType<PieceSpawnController>().CreatePieceList(parentObject, gameData.GamePieces);
         }
 
+        /// <summary>
+        /// Method to asynchronously load the selected game. This is done to prevent the game from freezing while loading.
+        /// </summary>
+        /// <param name="gameDataPath">Filepath to the folder of the gamedata JSON file</param>
+        /// <param name="gameData">The already parsed gamedata from the according JSON file</param>
         private IEnumerator TriggerGameImport(string gameDataPath, GameData gameData)
         {
             byte[] textureArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.Texture);
@@ -238,6 +279,13 @@ namespace WiapMR.GameScripts
             yield return null;
         }
 
+        /// <summary>
+        /// Helper function to quickly transfer small data to the other clients via RPC.
+        /// Alternatively it could be send via the DataTransfer class, but this is more efficient.
+        /// </summary>
+        /// <param name="gamePieces">Names of Gamepieces</param>
+        /// <param name="gameData">Serialized gamedata</param>
+        /// <param name="gamePieceArrSize">Size of gamepiece Array for incoming meshData</param>
         [PunRPC]
         public void SendSmallData(string[] gamePieces, byte[] gameData, int gamePieceArrSize)
         {
@@ -251,6 +299,11 @@ namespace WiapMR.GameScripts
             }
         }
 
+        /// <summary>
+        /// Spawns a gamepiece prefab via the PhotonNetwork and triggers local data import.
+        /// </summary>
+        /// <param name="pieceID">The id of the gamePiece</param>
+        /// <returns>The created Gameobject</returns>
         public GameObject SpawnGamePiece(int pieceID)
         {
             GameObject piece = PhotonNetwork.Instantiate(GamePiecePrefab.name, Vector3.zero, Quaternion.identity);
@@ -259,7 +312,10 @@ namespace WiapMR.GameScripts
             return piece;
         }
 
-
+        /// <summary>
+        /// Subsribes to the DataTransfer events to receive incoming data.
+        /// </summary>
+        /// <param name="calcChunks">Count of Chunks to be received</param>
         [PunRPC]
         public void SubscribeToDataEvents(int calcChunks)
         {
@@ -267,16 +323,26 @@ namespace WiapMR.GameScripts
             GameObject.FindObjectOfType<DataTransfer>().OnDataReceived += HandlePieceData;
             GameObject.FindObjectOfType<DataTransfer>().OnDataReceived += HandleTextureData;
         }
+
+        /// <summary>
+        /// Unsuscribes from the DataTransfer events.
+        /// </summary>
         private void UnsubcribeFromDataEvents()
         {
             GameObject.FindObjectOfType<DataTransfer>().OnDataReceived -= HandlePieceData;
             GameObject.FindObjectOfType<DataTransfer>().OnDataReceived -= HandleTextureData;
         }
-        private void HandlePieceData(string tag, byte[] data)
+
+        /// <summary>
+        /// Receives incoming gamepiece data and stores it in the gamePieceData array.
+        /// </summary>
+        /// <param name="otag">The tagging what this chunk contains - ends with the chunkID</param>
+        /// <param name="data">The actual byte data</param>
+        private void HandlePieceData(string otag, byte[] data)
         {
-            if (tag.StartsWith("GamePiece"))
+            if (otag.StartsWith("GamePiece"))
             {
-                int index = int.Parse(tag.Substring(tag.IndexOf("_") + 1));
+                int index = int.Parse(otag.Substring(otag.IndexOf("_") + 1));
                 _gamePieceData[index] = data;
                 _waitingForData--;
                 if (_waitingForData == 0)
@@ -286,6 +352,11 @@ namespace WiapMR.GameScripts
             }
         }
 
+        /// <summary>
+        /// Receives incoming Texture data and stores it in the textureData array.
+        /// </summary>
+        /// <param name="otag">The tagging what this chunk contains - ends with the chunkID</param>
+        /// <param name="data">The actual byte data</param>
         private void HandleTextureData(string oTag, byte[] data)
         {
             if (oTag == "Texture")

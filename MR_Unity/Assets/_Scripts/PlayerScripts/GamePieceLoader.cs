@@ -8,6 +8,10 @@ using WiapMR.GameScripts;
 
 namespace WiapMR.PlayerScripts
 {
+    /// <summary>
+    /// This class is responsible for loading in mesh and material data from the sent data.
+    /// This is done locally on every client since the gamepiece prefab is without mesh and color to be modular.
+    /// </summary>
     public class GamePieceLoader : MonoBehaviour
     {
         [PunRPC]
