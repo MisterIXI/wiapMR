@@ -3,112 +3,115 @@ using Photon.Pun;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 
-public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
+namespace WiapMR.GameScripts
 {
-    private GameObject board;
-    private Collider ownCollider;
-    private bool snapped;
-    private GameObject snappedTo;
-    private SnapPoint potentialSnapPoint;
-    public bool IsGrabbing = false;
-
-
-    void OnTriggerEnter(Collider collider)
+    public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
-        // Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + IsGrabbing);
-        if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
-        {
-            // Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
-            if (potentialSnapPoint != null)
-            {
-                potentialSnapPoint.UnhighlightHologram();
-            }
-            potentialSnapPoint = collider.gameObject.GetComponent<SnapPoint>();
-            potentialSnapPoint.HighlightHologram();
-        }
-    }
+        private GameObject board;
+        private Collider ownCollider;
+        private bool snapped;
+        private GameObject snappedTo;
+        private SnapPoint potentialSnapPoint;
+        public bool IsGrabbing = false;
 
 
-    void OnTriggerExit(Collider collider)
-    {
-        // Debug.Log("Collision with SnapPoint (Leave)");
-        if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
+        void OnTriggerEnter(Collider collider)
         {
-            if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
+            // Debug.Log("Collision with SnapPoint (Enter): " + collider.gameObject.tag + " | " + IsGrabbing);
+            if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
             {
-                potentialSnapPoint.UnhighlightHologram();
-                potentialSnapPoint = null;
+                // Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
+                if (potentialSnapPoint != null)
+                {
+                    potentialSnapPoint.UnhighlightHologram();
+                }
+                potentialSnapPoint = collider.gameObject.GetComponent<SnapPoint>();
+                potentialSnapPoint.HighlightHologram();
             }
         }
-    }
 
-    public bool IsSnapped()
-    {
-        return snapped;
-    }
 
-    public void OnInputDown(InputEventData eventData)
-    {
-        if (photonView.IsMine)
+        void OnTriggerExit(Collider collider)
         {
-
-            if (IsSnapped())
+            // Debug.Log("Collision with SnapPoint (Leave)");
+            if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
             {
-                photonView.RPC("UnSnap", RpcTarget.All);
+                if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
+                {
+                    potentialSnapPoint.UnhighlightHologram();
+                    potentialSnapPoint = null;
+                }
             }
-            SnapPoint.HolographicPreviewAll(gameObject);
-            IsGrabbing = true;
         }
-        else
+
+        public bool IsSnapped()
         {
-            photonView.RequestOwnership();
+            return snapped;
         }
-    }
-    public void OnInputUp(InputEventData eventData)
-    {
-        if (photonView.IsMine)
+
+        public void OnInputDown(InputEventData eventData)
         {
-            if (!snapped && potentialSnapPoint != null)
+            if (photonView.IsMine)
             {
-                photonView.RPC("SnapTo", RpcTarget.All);
-                // transform.position = potentialSnapPoint.transform.position;
+
+                if (IsSnapped())
+                {
+                    photonView.RPC("UnSnap", RpcTarget.All);
+                }
+                SnapPoint.HolographicPreviewAll(gameObject);
+                IsGrabbing = true;
             }
-            SnapPoint.StopHolographicPreviewAll();
-            IsGrabbing = false;
+            else
+            {
+                photonView.RequestOwnership();
+            }
         }
-    }
-
-    [PunRPC]
-    public void UnSnap()
-    {
-        this.snapped = false;
-
-    }
-
-    [PunRPC]
-    public void SnapTo()
-    {
-        snapped = true;
-
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        this.snapped = false;
-        board = GameObject.FindGameObjectWithTag("GameBoard");
-        if (photonView.IsMine)
+        public void OnInputUp(InputEventData eventData)
         {
-            GetComponent<ObjectManipulator>().enabled = true;
+            if (photonView.IsMine)
+            {
+                if (!snapped && potentialSnapPoint != null)
+                {
+                    photonView.RPC("SnapTo", RpcTarget.All);
+                    // transform.position = potentialSnapPoint.transform.position;
+                }
+                SnapPoint.StopHolographicPreviewAll();
+                IsGrabbing = false;
+            }
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // if (IsSnapped())
-        // {
-        //     transform.position = snappedTo.transform.position;
-        // }
+        [PunRPC]
+        public void UnSnap()
+        {
+            this.snapped = false;
+
+        }
+
+        [PunRPC]
+        public void SnapTo()
+        {
+            snapped = true;
+
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            this.snapped = false;
+            board = GameObject.FindGameObjectWithTag("GameBoard");
+            if (photonView.IsMine)
+            {
+                GetComponent<ObjectManipulator>().enabled = true;
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            // if (IsSnapped())
+            // {
+            //     transform.position = snappedTo.transform.position;
+            // }
+        }
     }
 }

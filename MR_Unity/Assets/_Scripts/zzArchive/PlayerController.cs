@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!_photonView.IsMine)
         {
-            transform.parent = GameObject.FindObjectOfType<GameController>().gameObject.transform;
+            // transform.parent = GameObject.FindObjectOfType<GameController>().gameObject.transform;
         }
     }
 }

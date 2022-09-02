@@ -1,104 +1,104 @@
 {
-    "version": 1,
-    "name": "Chess",
-    "height": 200,
-    "width": 200,
-    "texture": "Chessboard.png",
-    "gamePieces": [
+    "Version": 1,
+    "Name": "Chess",
+    "Height": 200,
+    "Width": 200,
+    "Texture": "Chessboard.png",
+    "GamePieces": [
         {
-            "name": "Bishop Black",
-            "path": "Bishop.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Bishop Black",
+            "Path": "Bishop.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "King Black",
-            "path": "King.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "King Black",
+            "Path": "King.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Knight Black",
-            "path": "Knight.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Knight Black",
+            "Path": "Knight.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Pawn Black",
-            "path": "Pawn.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Pawn Black",
+            "Path": "Pawn.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Queen Black",
-            "path": "Queen.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Queen Black",
+            "Path": "Queen.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Rook Black",
-            "path": "Rook.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Rook Black",
+            "Path": "Rook.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Bishop White",
-            "path": "Bishop.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Bishop White",
+            "Path": "Bishop.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "King White",
-            "path": "King.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "King White",
+            "Path": "King.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Knight White",
-            "path": "Knight.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Knight White",
+            "Path": "Knight.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Pawn White",
-            "path": "Pawn.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Pawn White",
+            "Path": "Pawn.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Queen White",
-            "path": "Queen.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Queen White",
+            "Path": "Queen.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Rook White",
-            "path": "Rook.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Rook White",
+            "Path": "Rook.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         }
     ],
-    "snapPoints": [],
-    "snapGrids": [
+    "SnapPoints": [],
+    "SnapGrids": [
         {
-            "startX": 12.5,
-            "startZ": 12.5,
-            "endX": 187.5,
-            "endZ": 187.5,
-            "countX": 8,
-            "countZ": 8
+            "StartX": 12.5,
+            "StartZ": 12.5,
+            "EndX": 187.5,
+            "EndZ": 187.5,
+            "CountX": 8,
+            "CountZ": 8
         }
     ]
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
 
-namespace WiapMR.PUN
+namespace CubeScene.PUN
 {
     public class ButtonHelper : MonoBehaviour
     {

@@ -1,34 +1,34 @@
 {
-    "version": 1,
-    "name": "Go",
-    "height": 200,
-    "width": 200,
-    "texture": "Go.png",
-    "gamePieces": [
+    "Version": 1,
+    "Name": "Go",
+    "Height": 200,
+    "Width": 200,
+    "Texture": "Go.png",
+    "GamePieces": [
         {
-            "name": "White Go Piece",
-            "path": "GoStone.obj",
-            "color": "255,255,255,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "White Go Piece",
+            "Path": "GoStone.obj",
+            "Color": "255,255,255,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         },
         {
-            "name": "Black Go Piece",
-            "path": "GoStone.obj",
-            "color": "100,100,100,1",
-            "metallic": "1",
-            "smoothness": "0.5"
+            "Name": "Black Go Piece",
+            "Path": "GoStone.obj",
+            "Color": "100,100,100,1",
+            "Metallic": "1",
+            "Smoothness": "0.5"
         }
     ],
-    "snapPoints": [],
-    "snapGrids": [
+    "SnapPoints": [],
+    "SnapGrids": [
         {
-            "startX": 4.638,
-            "startZ": 4.638,
-            "endX": 195.365,
-            "endZ": 195.365,
-            "countX": 19,
-            "countZ": 19
+            "StartX": 4.638,
+            "StartZ": 4.638,
+            "EndX": 195.365,
+            "EndZ": 195.365,
+            "CountX": 19,
+            "CountZ": 19
         }
     ]
 }

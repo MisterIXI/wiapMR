@@ -1,154 +1,152 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 
-public class GameData
+namespace WiapMR.GameScripts
 {
-
-    public string name;
-    public int height;
-    public int width;
-    public string texture;
-    public GamePiece[] gamePieces;
-    public SnapPointStruct[] snapPoints;
-    public SnapGrid[] snapGrids;
-    [System.Serializable]
-    public struct GamePiece
+    public class GameData
     {
-        public string name;
-        public string path;
-        public string color;
-        public float metallic;
-        public float smoothness;
-    }
-    [System.Serializable]
-    public struct SnapPointStruct
-    {
-        public int posX;
-        public int posY;
-        public int posZ;
-    }
-    [System.Serializable]
-    public struct SnapGrid
-    {
-        public float startX;
-        public float startY;
-        public float startZ;
-        public float endX;
-        public float endY;
-        public float endZ;
-        public int countX;
-        public int countY;
-        public int countZ;
-
-    }
-
-    public override string ToString()
-    {
-        return name + "(" + height + "," + width + ")";
-    }
-
-    public GameData()
-    {
-        name = "";
-        height = 0;
-        width = 0;
-        texture = "";
-        gamePieces = new GamePiece[0];
-        snapPoints = new SnapPointStruct[0];
-        snapGrids = new SnapGrid[0];
-    }
-
-    public byte[] ToByteArray()
-    {
-        // use a memorystream to save everything in one byte array
-        using (MemoryStream ms = new MemoryStream())
+        public string Name;
+        public int Height;
+        public int Width;
+        public string Texture;
+        public GamePiece[] GamePieces;
+        public SnapPointStruct[] SnapPoints;
+        public SnapGrid[] SnapGrids;
+        [System.Serializable]
+        public struct GamePiece
         {
-            using (BinaryWriter writer = new BinaryWriter(ms))
-            {
-                writer.Write(name);
-                writer.Write(height);
-                writer.Write(width);
-                writer.Write(texture);
-                writer.Write(gamePieces.Length);
-                for (int i = 0; i < gamePieces.Length; i++)
-                {
-                    writer.Write(gamePieces[i].name);
-                    writer.Write(gamePieces[i].path);
-                    writer.Write(gamePieces[i].color);
-                    writer.Write(gamePieces[i].metallic);
-                    writer.Write(gamePieces[i].smoothness);
-                }
-                writer.Write(snapPoints.Length);
-                for (int i = 0; i < snapPoints.Length; i++)
-                {
-                    writer.Write(snapPoints[i].posX);
-                    writer.Write(snapPoints[i].posY);
-                    writer.Write(snapPoints[i].posZ);
-                }
-                writer.Write(snapGrids.Length);
-                for (int i = 0; i < snapGrids.Length; i++)
-                {
-                    writer.Write(snapGrids[i].startX);
-                    writer.Write(snapGrids[i].startY);
-                    writer.Write(snapGrids[i].startZ);
-                    writer.Write(snapGrids[i].endX);
-                    writer.Write(snapGrids[i].endY);
-                    writer.Write(snapGrids[i].endZ);
-                    writer.Write(snapGrids[i].countX);
-                    writer.Write(snapGrids[i].countY);
-                    writer.Write(snapGrids[i].countZ);
-                }
-                writer.Flush();
-            }
-            return ms.ToArray();
+            public string Name;
+            public string Path;
+            public string Color;
+            public float Metallic;
+            public float Smoothness;
         }
-    }
-
-
-    public GameData(byte[] data)
-    {
-        // use a memorystream to load everything from the byte array
-        using (MemoryStream ms = new MemoryStream(data))
+        [System.Serializable]
+        public struct SnapPointStruct
         {
-            using (BinaryReader reader = new BinaryReader(ms))
+            public int PosX;
+            public int PosY;
+            public int PosZ;
+        }
+        [System.Serializable]
+        public struct SnapGrid
+        {
+            public float StartX;
+            public float StartY;
+            public float StartZ;
+            public float EndX;
+            public float EndY;
+            public float EndZ;
+            public int CountX;
+            public int CountY;
+            public int CountZ;
+        }
+
+        public override string ToString()
+        {
+            return Name + "(" + Height + "," + Width + ")";
+        }
+
+        public GameData()
+        {
+            Name = "";
+            Height = 0;
+            Width = 0;
+            Texture = "";
+            GamePieces = new GamePiece[0];
+            SnapPoints = new SnapPointStruct[0];
+            SnapGrids = new SnapGrid[0];
+        }
+
+        public byte[] ToByteArray()
+        {
+            // use a memorystream to save everything in one byte array
+            using (MemoryStream ms = new MemoryStream())
             {
-                name = reader.ReadString();
-                height = reader.ReadInt32();
-                width = reader.ReadInt32();
-                texture = reader.ReadString();
-                int gamePieceCount = reader.ReadInt32();
-                gamePieces = new GamePiece[gamePieceCount];
-                for (int i = 0; i < gamePieceCount; i++)
+                using (BinaryWriter writer = new BinaryWriter(ms))
                 {
-                    gamePieces[i].name = reader.ReadString();
-                    gamePieces[i].path = reader.ReadString();
-                    gamePieces[i].color = reader.ReadString();
-                    gamePieces[i].metallic = reader.ReadSingle();
-                    gamePieces[i].smoothness = reader.ReadSingle();
+                    writer.Write(Name);
+                    writer.Write(Height);
+                    writer.Write(Width);
+                    writer.Write(Texture);
+                    writer.Write(GamePieces.Length);
+                    for (int i = 0; i < GamePieces.Length; i++)
+                    {
+                        writer.Write(GamePieces[i].Name);
+                        writer.Write(GamePieces[i].Path);
+                        writer.Write(GamePieces[i].Color);
+                        writer.Write(GamePieces[i].Metallic);
+                        writer.Write(GamePieces[i].Smoothness);
+                    }
+                    writer.Write(SnapPoints.Length);
+                    for (int i = 0; i < SnapPoints.Length; i++)
+                    {
+                        writer.Write(SnapPoints[i].PosX);
+                        writer.Write(SnapPoints[i].PosY);
+                        writer.Write(SnapPoints[i].PosZ);
+                    }
+                    writer.Write(SnapGrids.Length);
+                    for (int i = 0; i < SnapGrids.Length; i++)
+                    {
+                        writer.Write(SnapGrids[i].StartX);
+                        writer.Write(SnapGrids[i].StartY);
+                        writer.Write(SnapGrids[i].StartZ);
+                        writer.Write(SnapGrids[i].EndX);
+                        writer.Write(SnapGrids[i].EndY);
+                        writer.Write(SnapGrids[i].EndZ);
+                        writer.Write(SnapGrids[i].CountX);
+                        writer.Write(SnapGrids[i].CountY);
+                        writer.Write(SnapGrids[i].CountZ);
+                    }
+                    writer.Flush();
                 }
-                int snapPointCount = reader.ReadInt32();
-                snapPoints = new SnapPointStruct[snapPointCount];
-                for (int i = 0; i < snapPointCount; i++)
+                return ms.ToArray();
+            }
+        }
+
+
+        public GameData(byte[] data)
+        {
+            // use a memorystream to load everything from the byte array
+            using (MemoryStream ms = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(ms))
                 {
-                    snapPoints[i].posX = reader.ReadInt32();
-                    snapPoints[i].posY = reader.ReadInt32();
-                    snapPoints[i].posZ = reader.ReadInt32();
-                }
-                int snapGridCount = reader.ReadInt32();
-                snapGrids = new SnapGrid[snapGridCount];
-                for (int i = 0; i < snapGridCount; i++)
-                {
-                    snapGrids[i].startX = reader.ReadSingle();
-                    snapGrids[i].startY = reader.ReadSingle();
-                    snapGrids[i].startZ = reader.ReadSingle();
-                    snapGrids[i].endX = reader.ReadSingle();
-                    snapGrids[i].endY = reader.ReadSingle();
-                    snapGrids[i].endZ = reader.ReadSingle();
-                    snapGrids[i].countX = reader.ReadInt32();
-                    snapGrids[i].countY = reader.ReadInt32();
-                    snapGrids[i].countZ = reader.ReadInt32();
+                    Name = reader.ReadString();
+                    Height = reader.ReadInt32();
+                    Width = reader.ReadInt32();
+                    Texture = reader.ReadString();
+                    int gamePieceCount = reader.ReadInt32();
+                    GamePieces = new GamePiece[gamePieceCount];
+                    for (int i = 0; i < gamePieceCount; i++)
+                    {
+                        GamePieces[i].Name = reader.ReadString();
+                        GamePieces[i].Path = reader.ReadString();
+                        GamePieces[i].Color = reader.ReadString();
+                        GamePieces[i].Metallic = reader.ReadSingle();
+                        GamePieces[i].Smoothness = reader.ReadSingle();
+                    }
+                    int snapPointCount = reader.ReadInt32();
+                    SnapPoints = new SnapPointStruct[snapPointCount];
+                    for (int i = 0; i < snapPointCount; i++)
+                    {
+                        SnapPoints[i].PosX = reader.ReadInt32();
+                        SnapPoints[i].PosY = reader.ReadInt32();
+                        SnapPoints[i].PosZ = reader.ReadInt32();
+                    }
+                    int snapGridCount = reader.ReadInt32();
+                    SnapGrids = new SnapGrid[snapGridCount];
+                    for (int i = 0; i < snapGridCount; i++)
+                    {
+                        SnapGrids[i].StartX = reader.ReadSingle();
+                        SnapGrids[i].StartY = reader.ReadSingle();
+                        SnapGrids[i].StartZ = reader.ReadSingle();
+                        SnapGrids[i].EndX = reader.ReadSingle();
+                        SnapGrids[i].EndY = reader.ReadSingle();
+                        SnapGrids[i].EndZ = reader.ReadSingle();
+                        SnapGrids[i].CountX = reader.ReadInt32();
+                        SnapGrids[i].CountY = reader.ReadInt32();
+                        SnapGrids[i].CountZ = reader.ReadInt32();
+                    }
                 }
             }
         }

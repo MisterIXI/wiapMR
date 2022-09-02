@@ -5,28 +5,30 @@ using Photon.Pun;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Input;
 
-
-public class GameBoard : MonoBehaviourPun, IMixedRealityInputHandler
+namespace WiapMR.GameScripts
 {
-    private bool isGrabbing = false;
-    void Start()
+    public class GameBoard : MonoBehaviourPun, IMixedRealityInputHandler
     {
-        if (photonView.IsMine)
+        private bool _isGrabbing = false;
+        void Start()
         {
-            GetComponent<ObjectManipulator>().enabled = true;
+            if (photonView.IsMine)
+            {
+                GetComponent<ObjectManipulator>().enabled = true;
+            }
         }
-    }
 
-    public void OnInputDown(InputEventData eventData)
-    {
-        if(!photonView.IsMine)
+        public void OnInputDown(InputEventData eventData)
         {
-             photonView.RequestOwnership();
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+            }
         }
-    }
 
-    public void OnInputUp(InputEventData eventData)
-    {
-
+        public void OnInputUp(InputEventData eventData)
+        {
+            // implemented to satisfy interface
+        }
     }
 }

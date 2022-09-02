@@ -5,7 +5,7 @@ using Photon.Pun;
 using Microsoft.MixedReality.Toolkit.Input;
 using Photon.Realtime;
 
-namespace WiapMR.PUN
+namespace CubeScene.PUN
 {
     [RequireComponent(typeof(PhotonView))]
     public class CubeController : MonoBehaviourPun, IMixedRealityInputHandler

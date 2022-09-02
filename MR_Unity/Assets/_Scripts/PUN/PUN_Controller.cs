@@ -6,6 +6,9 @@ using Photon.Realtime;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
 using Photon;
+using WiapMR.PlayerScripts;
+using WiapMR.GUI;
+using WiapMR.GameScripts;
 
 namespace WiapMR.PUN
 {
@@ -34,6 +37,7 @@ namespace WiapMR.PUN
                 .photonView.RPC("SpawnHead", RpcTarget.Others, PhotonNetwork.LocalPlayer.ActorNumber);
             GameObject.FindObjectOfType<StartPlate>().OnJoinRoom();
             // this.photonView.RPC("MasterSend", RpcTarget.MasterClient);
+            // GameObject.FindObjectOfType<StartPlate>().ChessClick();
             if (!PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Is not master client");
@@ -41,7 +45,6 @@ namespace WiapMR.PUN
             else
             {
                 Debug.Log("Is master client");
-                // gameObject.GetComponent<GameImporter>().CheckForPlayers(gameObject.GetComponent<GameImporter>().GameRoot);
             }
 
             // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();

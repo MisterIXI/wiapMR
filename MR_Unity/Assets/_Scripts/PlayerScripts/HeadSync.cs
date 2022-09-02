@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using WiapMR.GameScripts;
+using WiapMR.PUN;
 
-namespace WiapMR.PUN
+namespace WiapMR.PlayerScripts
 {
     public class HeadSync : MonoBehaviour
     {
@@ -87,7 +89,8 @@ namespace WiapMR.PUN
                                 }
                             }
                         }
-                        if(_headHelper != null){
+                        if (_headHelper != null)
+                        {
                             transform.position = _headHelper.transform.position;
                             transform.rotation = _headHelper.transform.rotation;
                         }
