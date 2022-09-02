@@ -1,6 +1,4 @@
 // taken from: https://gist.github.com/supachailllpay/893cd5b0c31dff3bb025
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
