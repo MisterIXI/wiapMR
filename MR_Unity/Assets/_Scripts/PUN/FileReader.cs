@@ -35,6 +35,10 @@ using UnityEngine;
 
 namespace WiapMR.PUN
 {
+    /// <summary>
+    /// Is used by the ObjectLoader to read .obj files.
+    /// Taken from: https://gist.github.com/supachailllpay/893cd5b0c31dff3bb025
+    /// </summary>
     public class FileReader
     {
 

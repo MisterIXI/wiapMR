@@ -6,6 +6,9 @@ using WiapMR.GameScripts;
 
 namespace WiapMR.PlayerScripts
 {
+    /// <summary>
+    /// This class is responsible for creating the gamepiece spawner buttons.
+    /// </summary>
     public class PieceSpawnController : MonoBehaviour
     {
         // according to https://docs.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/ux-building-blocks/scrolling-object-collection?view=mrtkunity-2022-05

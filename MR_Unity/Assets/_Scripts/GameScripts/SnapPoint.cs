@@ -29,6 +29,10 @@ namespace WiapMR.GameScripts
                 _material.SetColor("_Color", _spColorNormal);
         }
 
+        /// <summary>
+        /// Show the snappoint and assume the mesh of the previewed hologram. (The mesh preview is turned off currently)
+        /// </summary>
+        /// <param name="obj"></param>
         public void HolographicPreviewStart(GameObject obj)
         {
             // Debug.Log("HolographicPreviewStart | Material: " + material);
