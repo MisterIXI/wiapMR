@@ -14,7 +14,7 @@ namespace WiapMR.PlayerScripts
         // according to https://docs.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/ux-building-blocks/scrolling-object-collection?view=mrtkunity-2022-05
         public GameObject ButtonPrefab;
         public GameObject ScrollListPrefab;
-        private readonly List<string> Pieces = default;
+        private readonly List<string> Pieces = new List<string>();
         private string[] _piecePaths;
         private GameObject _board;
         private GameObject _scrollList;

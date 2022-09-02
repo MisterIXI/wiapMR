@@ -8,8 +8,8 @@ namespace WiapMR.PUN
     public class DataTransfer : MonoBehaviour
     {
         private const int Chunksize = 450000;
-        private Dictionary<string, int> _dataProgress = default;
-        private Dictionary<string, byte[]> _dataDictionary = default;
+        private Dictionary<string, int> _dataProgress = new Dictionary<string, int>();
+        private Dictionary<string, byte[]> _dataDictionary = new Dictionary<string, byte[]>();
 
         /// <summary>
         /// Event to subscribe to to be notified of received data.

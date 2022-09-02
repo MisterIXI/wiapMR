@@ -714,6 +714,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2246542707169976000, guid: 95d991d30bc793946b8e3bd52b6717b2, type: 3}
     - target: {fileID: 8191230048832815153, guid: 267075806fa570a4d9a1e52c90803d0c, type: 3}
+      propertyPath: GamePiecePrefab
+      value: 
+      objectReference: {fileID: 8166055692710453082, guid: 9ffe82649f76421469e4a6b65eb4e422, type: 3}
+    - target: {fileID: 8191230048832815153, guid: 267075806fa570a4d9a1e52c90803d0c, type: 3}
+      propertyPath: SnapPointPrefab
+      value: 
+      objectReference: {fileID: 790646109668074858, guid: ad864931e9c538f4e8203aa26d31b45e, type: 3}
+    - target: {fileID: 8191230048832815153, guid: 267075806fa570a4d9a1e52c90803d0c, type: 3}
       propertyPath: ScrollListPrefab
       value: 
       objectReference: {fileID: 6045800185837921696, guid: 710e2e194563ef2499ba01f2794644fe, type: 3}

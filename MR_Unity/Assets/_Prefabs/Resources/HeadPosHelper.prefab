@@ -85,5 +85,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b664ffb1c1406645a320704f90394bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherToSync: {fileID: 0}
-  playerID: -2
+  OtherToSync: {fileID: 0}

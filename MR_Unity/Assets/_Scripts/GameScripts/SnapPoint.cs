@@ -7,7 +7,7 @@ namespace WiapMR.GameScripts
     {
         private readonly Color _spColorNormal = new Color(0.3820755f, 0.9336458f, 1f, 0.5333334f);
         private readonly Color _spColorHighlight = new Color(0.2978373f, 0.9150943f, 0.4001075f, 0.5333334f);
-        private static readonly List<SnapPoint> _snapPoints = default;
+        private static readonly List<SnapPoint> _snapPoints = new List<SnapPoint>();
         private List<SnapPoint> _connectedSnapPoints;
         private Material _material;
 
