@@ -14,16 +14,13 @@ namespace WiapMR.GameScripts
 {
     public class GameImporter : MonoBehaviourPunCallbacks
     {
-        private string GAME_DATA_PATH;
-        private const float GAMEBOARD_THICKNESS = 5f;
-        private readonly float GAMEPIECE_START_FACTOR = 0.01f;
-        private readonly float GAMEBOARD_START_FACTOR = 0.1f;
+        private const float GameboardThickness = 5f;
 
         public GameObject SnapPointPrefab;
         public GameObject GamePiecePrefab;
         public GameObject ScrollListPrefab;
         public GameObject ButtonPrefab;
-        private int _waitingForData = 0;
+        private int _waitingForData;
         private byte[][] _gamePieceData;
         private byte[] _textureData;
         private string[] _gamePieceNames;
@@ -43,7 +40,6 @@ namespace WiapMR.GameScripts
             {
                 throw new Exception("Still waiting for data");
             }
-            GAME_DATA_PATH = Application.dataPath + "/_Games/";
             string path = Application.dataPath + "/_Games/Go/";
             try
             {
@@ -63,7 +59,6 @@ namespace WiapMR.GameScripts
             {
                 throw new Exception("Still waiting for data");
             }
-            GAME_DATA_PATH = Application.dataPath + "/_Games/";
             string path = Application.dataPath + "/_Games/Chess/";
             Debug.Log("Loading Chess");
             try
@@ -145,8 +140,8 @@ namespace WiapMR.GameScripts
             GameObject game = GameObject.CreatePrimitive(PrimitiveType.Cube);
             game.name = "GameBoard_Cube";
             // scale the board according to the json data
-            game.transform.localScale = new Vector3(gameData.Width, GAMEBOARD_THICKNESS, gameData.Height);
-            game.transform.position = new Vector3(gameData.Width / 2, -GAMEBOARD_THICKNESS / 2, gameData.Height / 2);
+            game.transform.localScale = new Vector3(gameData.Width, GameboardThickness, gameData.Height);
+            game.transform.position = new Vector3(gameData.Width / 2, -GameboardThickness / 2, gameData.Height / 2);
             game.transform.parent = parentObject.transform;
             // take color of texture at 0,0 to try and make it fit better
             game.GetComponent<Renderer>().material.color = tex.GetPixel(0, 0);
@@ -199,14 +194,12 @@ namespace WiapMR.GameScripts
             {
                 if (syncObj.photonView.IsMine && syncObj.gameObject.name.StartsWith("BoardPosHelper"))
                 {
-                    syncObj.otherToSync = board;
+                    syncObj.OtherToSync = board;
                 }
             }
         }
         private void FillGamePieceData(GameData gameData, GameObject parentObject, string[] gpNames, byte[][] gpData)
         {
-            List<string> gpNamesList = new List<string>(gpNames);
-            GameObject[] result = new GameObject[gameData.GamePieces.Length];
             for (int i = 0; i < gpData.Length; i++)
             {
                 GamePieceData.Add(gpNames[i], System.Text.Encoding.UTF8.GetString(gpData[i]).Split('\n'));
@@ -217,8 +210,6 @@ namespace WiapMR.GameScripts
         private IEnumerator TriggerGameImport(string gameDataPath, GameData gameData)
         {
             byte[] textureArr = System.IO.File.ReadAllBytes(gameDataPath + gameData.Texture);
-            List<byte[]> meshList = new List<byte[]>();
-
             List<string> deduplicatedGamePieces = ImporterHelper.DeduplicateGamePieces(gameData);
             byte[][] gamePiecesData_BYTES = new byte[deduplicatedGamePieces.Count][];
             for (int i = 0; i < deduplicatedGamePieces.Count; i++)
@@ -231,8 +222,6 @@ namespace WiapMR.GameScripts
                 }
                 gamePiecesData_BYTES[i] = System.Text.Encoding.UTF8.GetBytes(data);
             }
-            int[] gdSizes = new int[] { gameData.GamePieces.Length, gameData.SnapPoints.Length, gameData.SnapGrids.Length };
-            // Debug.Log("DEBUG:" + gamePiecesData_BYTES.Length + " " + gamePiecesData_BYTES[0].Length + "," + gamePiecesData_BYTES[1].Length);
             // split data up in smaller junks and send them to the clients via RPC
             // https://forum.photonengine.com/discussion/13276/any-way-to-send-large-data-via-rpcs-without-it-kicking-us-offline
             // max 512kb/message!
@@ -246,8 +235,6 @@ namespace WiapMR.GameScripts
                 dt.SendData(gamePiecesData_BYTES[i], "GamePiece_" + i);
             }
             dt.SendData(textureArr, "Texture");
-            // this.photonView.RPC("ImportGame", RpcTarget.All, textureArr, deduplicatedGamePieces.ToArray(), gamePiecesData_BYTES, gameData.ToByteArray());
-
             yield return null;
         }
 
@@ -299,9 +286,9 @@ namespace WiapMR.GameScripts
             }
         }
 
-        private void HandleTextureData(string tag, byte[] data)
+        private void HandleTextureData(string oTag, byte[] data)
         {
-            if (tag == "Texture")
+            if (oTag == "Texture")
             {
                 _textureData = data;
                 _waitingForData--;
@@ -322,7 +309,7 @@ namespace WiapMR.GameScripts
             GameData result = JsonUtility.FromJson<GameData>(File.ReadAllText(path));
             // Debug.Log("Imported as: " + result);
             // set default name
-            if (result.Name == null || result.Name == "")
+            if (String.IsNullOrEmpty(result.Name))
             {
                 result.Name = "New game";
             }
@@ -334,11 +321,11 @@ namespace WiapMR.GameScripts
             // set empty arrays to "snapPoints" and "snapGrids" if they are not initialized
             if (result.SnapPoints == null)
             {
-                result.SnapPoints = new GameData.SnapPointStruct[0];
+                result.SnapPoints = Array.Empty<GameData.SnapPointStruct>();
             }
             if (result.SnapGrids == null)
             {
-                result.SnapGrids = new GameData.SnapGrid[0];
+                result.SnapGrids = Array.Empty<GameData.SnapGrid>();
             }
 
             // set every countX, countY, countZ to 1 if they are 0

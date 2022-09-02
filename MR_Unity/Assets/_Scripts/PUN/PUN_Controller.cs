@@ -42,9 +42,6 @@ namespace WiapMR.PUN
             {
                 Debug.Log("Is master client");
             }
-
-            // GameObject.Find("ButtonHelper").GetComponent<ButtonHelper>().EnableButtons();
-            //PhotonNetwork.Instantiate(photonUserPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

@@ -41,18 +41,9 @@ namespace WiapMR.PlayerScripts
             // without this line the shader will only show the correct color until something changes
             // with it, it seems to reload the variables and renders correctly
             currentMat.shader = Shader.Find("Standard");
-            // transform.localScale = transform.localScale * 1f;
-            // Debug.Log("piece Bounds before: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
-            var boxSize = gameObject.GetComponent<BoxCollider>().size;
-            var scaleFactor = 5f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
-            // Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
-            // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-            // Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
-            // StartCoroutine("testDebug");
             StartCoroutine("delayedScaling");
-            // Debug.Log("piece Bounds after: " + gameObject.GetComponent<MeshRenderer>().bounds.ToString());
         }
-        IEnumerator delayedScaling()
+        IEnumerator DelayedScaling()
         {
             yield return new WaitForSeconds(0.1f);
             var boxSize = gameObject.GetComponent<BoxCollider>().size;
@@ -75,28 +66,6 @@ namespace WiapMR.PlayerScripts
             }
             gameObject.AddComponent<BoxCollider>();
             transform.localScale = new Vector3(2, 2, 2);
-            // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-
-        }
-        IEnumerator testDebug()
-        {
-            bool run = false;
-            while (run)
-            {
-                yield return new WaitForSeconds(0.5f);
-                var boxSize = gameObject.GetComponent<BoxCollider>().size;
-                var maxSize = Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
-                if (maxSize <= 5f)
-                {
-                    run = false;
-                }
-                else
-                {
-                    var scaleFactor = 5f / Mathf.Max(boxSize.x, boxSize.y, boxSize.z);
-                    Debug.Log("Factor: " + scaleFactor + " Box Collider size: " + gameObject.GetComponent<BoxCollider>().size);
-                    // transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-                }
-            }
         }
     }
 }

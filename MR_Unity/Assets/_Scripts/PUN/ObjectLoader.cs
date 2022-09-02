@@ -6,21 +6,18 @@ namespace WiapMR.PUN
 {
     public class ObjectLoader : MonoBehaviour
     {
-
-        public bool isLoaded;
-
+        private bool _isLoaded;
         void Awake()
         {
-            isLoaded = true;
+            _isLoaded = true;
         }
 
         public void Load(string[] fileContent)
         {
-            if (!isLoaded)
+            if (!_isLoaded)
                 return;
 
             ConstructModel(fileContent);
-            // StartCoroutine (ConstructModel (filename));
         }
 
         /// <summary>
@@ -29,29 +26,19 @@ namespace WiapMR.PUN
         /// <param name="fileContent">File content of a .obj file read with File.ReadAllLines(path);</param>
         void ConstructModel(string[] fileContent)
         {
-
-            isLoaded = false;
-
+            _isLoaded = false;
             FileReader.ObjectFile obj = FileReader.ReadObjectFile(fileContent);
-            // FileReader.MaterialFile mtl = FileReader.ReadMaterialFile (directoryPath + obj.mtllib);
-
             MeshFilter filter = gameObject.AddComponent<MeshFilter>();
             MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
-
             filter.mesh = PopulateMesh(obj);
-            // renderer.materials = DefineMaterial (obj, mtl);
-
-            isLoaded = true;
+            _isLoaded = true;
         }
 
         Mesh PopulateMesh(FileReader.ObjectFile obj)
         {
-
             Mesh mesh = new Mesh();
-
             List<int[]> triplets = new List<int[]>();
             List<int> submeshes = new List<int>();
-
             for (int i = 0; i < obj.f.Count; i += 1)
             {
                 for (int j = 0; j < obj.f[i].Count; j += 1)
@@ -60,11 +47,9 @@ namespace WiapMR.PUN
                 }
                 submeshes.Add(obj.f[i].Count);
             }
-
             Vector3[] vertices = new Vector3[triplets.Count];
             Vector3[] normals = new Vector3[triplets.Count];
             Vector2[] uvs = new Vector2[triplets.Count];
-
             for (int i = 0; i < triplets.Count; i += 1)
             {
                 vertices[i] = obj.v[triplets[i][0] - 1];
@@ -72,7 +57,6 @@ namespace WiapMR.PUN
                 if (triplets[i][1] > 0)
                     uvs[i] = obj.vt[triplets[i][1] - 1];
             }
-
             mesh.name = obj.o;
             mesh.vertices = vertices;
             mesh.normals = normals;
@@ -90,12 +74,9 @@ namespace WiapMR.PUN
                 }
                 mesh.SetTriangles(triangles, i);
             }
-
             mesh.RecalculateBounds();
             mesh.Optimize();
-
             return mesh;
         }
-
     }
 }

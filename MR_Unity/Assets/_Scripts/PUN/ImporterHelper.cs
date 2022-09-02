@@ -34,7 +34,6 @@ namespace WiapMR.PUN
 
         public static void ScaleUp(GameObject objectToScale, Vector3 scale)
         {
-            // Debug.Log("Old scale: " + objectToScale.transform.localScale);
             // scale up the game object to match mesh bounding box and scale
             Vector3 meshScale = objectToScale.GetComponent<MeshRenderer>().bounds.size;
             float[] scaleFactor = new float[] { scale.x / meshScale.x, scale.y / meshScale.y, scale.z / meshScale.z };
@@ -53,11 +52,6 @@ namespace WiapMR.PUN
             objectToScale.transform.localScale = meshScaleScaled;
             Destroy(objectToScale.GetComponent<BoxCollider>());
             objectToScale.AddComponent<BoxCollider>();
-            // gameObject.GetComponent<MeshRenderer>();
-            // Debug.Log("Scaled up to: " + gameObject.GetComponent<MeshRenderer>().bounds);
-            // Debug.Log("New scale: " + objectToScale.transform.localScale);
-
-
         }
 
         // https://stackoverflow.com/questions/3278827/how-to-convert-a-structure-to-a-byte-array-in-c
@@ -75,33 +69,23 @@ namespace WiapMR.PUN
                 Marshal.StructureToPtr(customObject, ptr, true);
                 Marshal.Copy(ptr, arr, 0, size);
             }
-
             finally
             {
                 Marshal.FreeHGlobal(ptr);
             }
-
             return arr;
         }
 
         public static GameData DeserializeGameData(int[] sizes, byte[] serializedCustomObject)
         {
-
             GameData gameData = new GameData();
-
-            // gameData.gamePieces = new GameData.GamePiece[sizes[0]];
-            // gameData.snapPoints = new GameData.SnapPointStruct[sizes[1]];
-            // gameData.snapGrids = new GameData.SnapGrid[sizes[2]];
-
             int size = Marshal.SizeOf(gameData);
             Debug.Log("Size after: " + size);
             IntPtr ptr = IntPtr.Zero;
             try
             {
                 ptr = Marshal.AllocHGlobal(size);
-
                 Marshal.Copy(serializedCustomObject, 0, ptr, size);
-
                 gameData = (GameData)Marshal.PtrToStructure(ptr, gameData.GetType());
             }
             finally

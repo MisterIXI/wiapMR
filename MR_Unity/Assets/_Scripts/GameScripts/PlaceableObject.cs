@@ -7,11 +7,11 @@ namespace WiapMR.GameScripts
 {
     public class PlaceableObject : MonoBehaviourPun, IMixedRealityInputHandler
     {
-        private GameObject board;
-        private Collider ownCollider;
-        private bool snapped;
-        private GameObject snappedTo;
-        private SnapPoint potentialSnapPoint;
+        private GameObject _board;
+        private Collider _ownCollider;
+        private bool _snapped;
+        private GameObject _snappedTo;
+        private SnapPoint _potentialSnapPoint;
         public bool IsGrabbing = false;
 
 
@@ -21,12 +21,12 @@ namespace WiapMR.GameScripts
             if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
             {
                 // Debug.Log("Collision with SnapPoint (ACTUALLY_ENTER)");
-                if (potentialSnapPoint != null)
+                if (_potentialSnapPoint != null)
                 {
-                    potentialSnapPoint.UnhighlightHologram();
+                    _potentialSnapPoint.UnhighlightHologram();
                 }
-                potentialSnapPoint = collider.gameObject.GetComponent<SnapPoint>();
-                potentialSnapPoint.HighlightHologram();
+                _potentialSnapPoint = collider.gameObject.GetComponent<SnapPoint>();
+                _potentialSnapPoint.HighlightHologram();
             }
         }
 
@@ -36,17 +36,17 @@ namespace WiapMR.GameScripts
             // Debug.Log("Collision with SnapPoint (Leave)");
             if (collider.gameObject.tag == "SnapPoint" && IsGrabbing)
             {
-                if (potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
+                if (_potentialSnapPoint == collider.gameObject.GetComponent<SnapPoint>())
                 {
-                    potentialSnapPoint.UnhighlightHologram();
-                    potentialSnapPoint = null;
+                    _potentialSnapPoint.UnhighlightHologram();
+                    _potentialSnapPoint = null;
                 }
             }
         }
 
         public bool IsSnapped()
         {
-            return snapped;
+            return _snapped;
         }
 
         public void OnInputDown(InputEventData eventData)
@@ -70,7 +70,7 @@ namespace WiapMR.GameScripts
         {
             if (photonView.IsMine)
             {
-                if (!snapped && potentialSnapPoint != null)
+                if (!_snapped && _potentialSnapPoint != null)
                 {
                     photonView.RPC("SnapTo", RpcTarget.All);
                     // transform.position = potentialSnapPoint.transform.position;
@@ -83,35 +83,26 @@ namespace WiapMR.GameScripts
         [PunRPC]
         public void UnSnap()
         {
-            this.snapped = false;
+            this._snapped = false;
 
         }
 
         [PunRPC]
         public void SnapTo()
         {
-            snapped = true;
+            _snapped = true;
 
         }
 
-        // Start is called before the first frame update
         void Start()
         {
-            this.snapped = false;
-            board = GameObject.FindGameObjectWithTag("GameBoard");
+            this._snapped = false;
+            _board = GameObject.FindGameObjectWithTag("GameBoard");
             if (photonView.IsMine)
             {
                 GetComponent<ObjectManipulator>().enabled = true;
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            // if (IsSnapped())
-            // {
-            //     transform.position = snappedTo.transform.position;
-            // }
-        }
     }
 }

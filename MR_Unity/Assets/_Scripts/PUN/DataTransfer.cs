@@ -7,19 +7,21 @@ namespace WiapMR.PUN
 {
     public class DataTransfer : MonoBehaviour
     {
-        private const int CHUNKSIZE = 450000;
-        private Dictionary<string, int> dataProgress = new Dictionary<string, int>();
-        private Dictionary<string, byte[]> dataDictionary = new Dictionary<string, byte[]>();
+        private const int Chunksize = 450000;
+        private Dictionary<string, int> _dataProgress = default;
+        private Dictionary<string, byte[]> _dataDictionary = default;
+        public event Action<string, byte[]> OnDataReceived = delegate { };
+
         public void SendData(byte[] data, string tag)
         {
             PhotonView photonView = GetComponent<PhotonView>();
-            if (data.Length > CHUNKSIZE)
+            if (data.Length > Chunksize)
             {
-                int chunks = (int)Math.Ceiling((double)data.Length / CHUNKSIZE);
+                int chunks = (int)Math.Ceiling((double)data.Length / Chunksize);
                 for (int i = 0; i < chunks; i++)
                 {
-                    byte[] chunk = new byte[CHUNKSIZE];
-                    Array.Copy(data, i * CHUNKSIZE, chunk, 0, Math.Min(CHUNKSIZE, data.Length - i * CHUNKSIZE));
+                    byte[] chunk = new byte[Chunksize];
+                    Array.Copy(data, i * Chunksize, chunk, 0, Math.Min(Chunksize, data.Length - i * Chunksize));
                     photonView.RPC("ReceiveData", RpcTarget.All, i + 1, chunks, data.Length, tag, chunk);
                 }
             }
@@ -29,36 +31,33 @@ namespace WiapMR.PUN
             }
         }
 
-        public event Action<string, byte[]> OnDataReceived = delegate { };
-
         [PunRPC]
         public void ReceiveData(int step, int totalSteps, int arrSize, string tag, byte[] data)
         {
             // check for tag in Dictionary
-            if (!dataProgress.ContainsKey(tag))
+            if (!_dataProgress.ContainsKey(tag))
             {
-                dataProgress.Add(tag, 1);
-                dataDictionary.Add(tag, new byte[arrSize]);
+                _dataProgress.Add(tag, 1);
+                _dataDictionary.Add(tag, new byte[arrSize]);
             }
             else
             {
-                dataProgress[tag]++;
+                _dataProgress[tag]++;
             }
-            int currentSteps = dataProgress[tag];
+            int currentSteps = _dataProgress[tag];
             // add chunk to data in Dictionary
-            int startIndex = (step - 1) * CHUNKSIZE;
+            int startIndex = (step - 1) * Chunksize;
             // int endIndex = Math.Min(step * CHUNKSIZE, arrSize);
-            Array.Copy(data, startIndex, dataDictionary[tag], 0, data.Length);
+            Array.Copy(data, startIndex, _dataDictionary[tag], 0, data.Length);
             // check if all chunks are received
             if (currentSteps == totalSteps)
             {
                 // Debug.Log("Event: " + OnDataReceived + "| Tag: " + tag + "| Data: " + dataDictionary[tag].Length);
-                OnDataReceived?.Invoke(tag, dataDictionary[tag]);
-                dataProgress.Remove(tag);
-                dataDictionary.Remove(tag);
+                OnDataReceived?.Invoke(tag, _dataDictionary[tag]);
+                _dataProgress.Remove(tag);
+                _dataDictionary.Remove(tag);
             }
         }
-
 
     }
 }

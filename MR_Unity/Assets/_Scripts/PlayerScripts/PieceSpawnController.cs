@@ -11,21 +11,10 @@ namespace WiapMR.PlayerScripts
         // according to https://docs.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk2/features/ux-building-blocks/scrolling-object-collection?view=mrtkunity-2022-05
         public GameObject ButtonPrefab;
         public GameObject ScrollListPrefab;
-        public List<string> Pieces = new List<string>();
+        private readonly List<string> Pieces = default;
         private string[] _piecePaths;
         private GameObject _board;
         private GameObject _scrollList;
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
 
         public void CreatePieceList(GameObject board, GameData.GamePiece[] pieces)
         {

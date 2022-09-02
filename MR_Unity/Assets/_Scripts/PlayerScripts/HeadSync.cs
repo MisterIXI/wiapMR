@@ -7,34 +7,31 @@ namespace WiapMR.PlayerScripts
 {
     public class HeadSync : MonoBehaviour
     {
-        Camera cam;
-        public PhotonView pv;
+        private Camera _cam;
+        private PhotonView _pv;
         private GameObject _head;
         private GameObject _headHelper;
         private GameObject _boardHelper;
         private GameObject _board;
-        private bool isInitialized = false;
-        public bool isPlayer = false;
-        void Start()
-        {
+        private bool _isInitialized = false;
+        private bool _isPlayer = false;
 
-        }
-        public void initTracking(GameObject headHelper, GameObject boardHelper, bool isPlayer)
+        public void InitTracking(GameObject headHelper, GameObject boardHelper, bool isPlayer)
         {
-            if (!isInitialized)
+            if (!_isInitialized)
             {
-                isInitialized = true;
-                this.isPlayer = isPlayer;
+                _isInitialized = true;
+                this._isPlayer = isPlayer;
                 this._headHelper = headHelper;
                 this._boardHelper = boardHelper;
                 // Debug.Log("Head alive! | " + (isPlayer ? "Player" : "Other"));
-                cam = Camera.main;
-                pv = _headHelper.GetComponent<PhotonView>();
+                _cam = Camera.main;
+                _pv = _headHelper.GetComponent<PhotonView>();
                 GameImporter gi = GameObject.FindObjectOfType<GameImporter>();
                 // if (gi != null)
                 //     gi.CheckForPlayers(gi.GameRoot);
                 Debug.Log("Is in room: " + PhotonNetwork.InRoom + " |Room: " + PhotonNetwork.CurrentRoom);
-                if (pv.IsMine)
+                if (_pv.IsMine)
                 {
                     var renderers = GetComponentsInChildren<MeshRenderer>();
                     foreach (var r in renderers)
@@ -47,15 +44,15 @@ namespace WiapMR.PlayerScripts
         // Update is called once per frame
         void Update()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
 
-                if (isPlayer)
+                if (_isPlayer)
                 {
-                    if (pv != null && pv.IsMine)
+                    if (_pv != null && _pv.IsMine)
                     {
-                        transform.localPosition = cam.transform.position;
-                        transform.localRotation = cam.transform.rotation;
+                        transform.localPosition = _cam.transform.position;
+                        transform.localRotation = _cam.transform.rotation;
                     }
                 }
                 else

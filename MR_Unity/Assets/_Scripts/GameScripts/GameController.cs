@@ -4,11 +4,11 @@ namespace WiapMR.GameScripts
 {
     public class GameController : MonoBehaviour
     {
-        public static bool GAME_SPAWNED = false;
+        private static bool _gameSpawned = false;
 
         private void Start()
         {
-            GAME_SPAWNED = true;
+            _gameSpawned = true;
         }
     }
 }

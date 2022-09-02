@@ -10,8 +10,8 @@ namespace WiapMR.PlayerScripts
         public GameObject PlayerHeadPrefab;
         public GameObject PlayerHandPrefab;
 
-        public GameObject _player;
-        public GameObject _head;
+        private GameObject _player;
+        private GameObject _head;
         public GameObject HeadHelper;
         public GameObject BoardHelper;
 
@@ -33,13 +33,11 @@ namespace WiapMR.PlayerScripts
             Transform camera_transform = Camera.main.transform;
             Debug.Log("Camera pos: " + camera_transform.position);
             _head = Instantiate(PlayerHeadPrefab, camera_transform.position, camera_transform.rotation, _player.transform);
-            // _head = Instantiate(PlayerHeadPrefab, camera_transform.position, camera_transform.rotation);
-            // head.transform.parent = parent.transform;
-            _head.GetComponent<HeadSync>().initTracking(HeadHelper, BoardHelper, true);
+            _head.GetComponent<HeadSync>().InitTracking(HeadHelper, BoardHelper, true);
             _head.transform.parent = _player.transform;
 
             // set object to track to headTracker
-            HeadHelper.GetComponent<SyncPos>().otherToSync = _head;
+            HeadHelper.GetComponent<SyncPos>().OtherToSync = _head;
             // boardTracker object needs to be set after GameImporter is done
         }
 

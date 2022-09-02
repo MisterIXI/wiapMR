@@ -3,44 +3,45 @@ using TMPro;
 
 namespace WiapMR.GUI
 {
+    // taken from http://answers.unity.com/answers/927240/view.html
     public class ConsoleToGUI : MonoBehaviour
     {
-        public TextMeshPro textMesh;
-        string myLog = "*begin log";
-        string filename = "";
-        bool doShow = true;
-        int kChars = 700;
+        public TextMeshPro TextMesh;
+        string _myLog = "*begin log";
+        string _filename = "";
+        bool _doShow = true;
+        int _kChars = 700;
         void OnEnable() { Application.logMessageReceived += Log; }
         void OnDisable() { Application.logMessageReceived -= Log; }
-        void Update() { if (Input.GetKeyDown(KeyCode.Space)) { doShow = !doShow; } }
+        void Update() { if (Input.GetKeyDown(KeyCode.Space)) { _doShow = !_doShow; } }
         public void Log(string logString, string stackTrace, LogType type)
         {
             // for onscreen...
-            myLog = myLog + "\n" + logString;
-            if (myLog.Length > kChars) { myLog = myLog.Substring(myLog.Length - kChars); }
+            _myLog = _myLog + "\n" + logString;
+            if (_myLog.Length > _kChars) { _myLog = _myLog.Substring(_myLog.Length - _kChars); }
 
             // for the file ...
-            if (filename == "")
+            if (_filename == "")
             {
                 string d = System.Environment.GetFolderPath(
                    System.Environment.SpecialFolder.Desktop) + "/YOUR_LOGS";
                 System.IO.Directory.CreateDirectory(d);
                 string r = Random.Range(1000, 9999).ToString();
-                filename = d + "/log-" + r + ".txt";
+                _filename = d + "/log-" + r + ".txt";
             }
-            try { System.IO.File.AppendAllText(filename, logString + "\n"); }
+            try { System.IO.File.AppendAllText(_filename, logString + "\n"); }
             catch { }
         }
 
         void OnGUI()
         {
-            if (!doShow) { return; }
+            if (!_doShow) { return; }
             // GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
             //    new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
             // GUI.TextArea(new Rect(10, 10, 540, 370), myLog);
-            if (textMesh != null)
+            if (TextMesh != null)
             {
-                textMesh.text = myLog;
+                TextMesh.text = _myLog;
             }
         }
     }

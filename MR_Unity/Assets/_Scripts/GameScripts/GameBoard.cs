@@ -6,7 +6,6 @@ namespace WiapMR.GameScripts
 {
     public class GameBoard : MonoBehaviourPun, IMixedRealityInputHandler
     {
-        private bool _isGrabbing = false;
         void Start()
         {
             if (photonView.IsMine)

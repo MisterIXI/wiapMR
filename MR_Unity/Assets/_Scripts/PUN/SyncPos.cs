@@ -6,8 +6,7 @@ namespace WiapMR.PUN
 {
     public class SyncPos : MonoBehaviourPunCallbacks
     {
-        public GameObject otherToSync;
-        public int playerID = -2;
+        public GameObject OtherToSync;
 
         private void Start()
         {
@@ -18,11 +17,11 @@ namespace WiapMR.PUN
         }
         private void Update()
         {
-            if (otherToSync != null)
+            if (OtherToSync != null)
             {
-                transform.localPosition = otherToSync.transform.position;
-                transform.localRotation = otherToSync.transform.rotation;
-                transform.localScale = otherToSync.transform.localScale;
+                transform.localPosition = OtherToSync.transform.position;
+                transform.localRotation = OtherToSync.transform.rotation;
+                transform.localScale = OtherToSync.transform.localScale;
             }
         }
 
@@ -55,7 +54,7 @@ namespace WiapMR.PUN
                 PlayerManager pm = GameObject.FindObjectOfType<PlayerManager>();
                 GameObject _head = Instantiate(pm.PlayerHeadPrefab, Vector3.zero, Quaternion.identity, _player.transform);
                 _head.transform.parent = _player.transform;
-                _head.GetComponent<HeadSync>().initTracking(gameObject, GameObject.Find("BoardPosHelper" + playerID), false);
+                _head.GetComponent<HeadSync>().InitTracking(gameObject, GameObject.Find("BoardPosHelper" + playerID), false);
             }
         }
 
