@@ -12,6 +12,9 @@ using WiapMR.PlayerScripts;
 
 namespace WiapMR.GameScripts
 {
+    /// <summary>
+    /// Big class that handles most of the actual importer logic and gameboard spawning.
+    /// </summary>
     public class GameImporter : MonoBehaviourPunCallbacks
     {
         private const float GameboardThickness = 5f;
