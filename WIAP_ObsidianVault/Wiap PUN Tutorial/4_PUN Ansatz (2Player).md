@@ -39,98 +39,170 @@ Den nutzen wir als beispiel wie man raum und ownership management betreibt.
 Als Übersicht hier die noch leeren Methoden:
 ```cs
 using System.Collections;
-
 using System.Collections.Generic;
-
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+public class PUNController : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
+{
+    public GameObject playerPrefab;
+    
+    private void Start()
+    {
+        Debug.Log("Attempting to connect to Master Server...");
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Connected to master");
+    }
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Joined room");
+        // called when we join a room
+    }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log("Player entered room: " + newPlayer.NickName);
+        // called when a player enters the room
+    }
+    public override void OnLeftRoom()
+    {
+        Debug.Log("Left room");
+        // called when we leave the room
+    }
+    public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
+    {
+        Debug.Log("Ownership request: " + targetView.ViewID + " from " + requestingPlayer.NickName);
+    }
+    public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
+    {
+        Debug.Log("Ownership transfered: " + targetView.ViewID + " from " + previousOwner.NickName);
+    }
+    public void OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest)
+    {
+        Debug.Log("Ownership transfer failed: " + targetView.ViewID + " from " + senderOfFailedRequest.NickName);
+    }
+
+    private void Update()
+    {
+    }
+}
+
+```
+
+Beachte das Playerprefab, die Imports und Parentklasse & Interface.
+
+Nun Füllen wir die meisten Methoden mit Leben:
+
+Zunächst müssen wir uns überhaupt mit dem Masterserver verbinden:
+```cs
+    private void Start()
+    {
+        Debug.Log("Attempting to connect to Master Server...");
+        PhotonNetwork.ConnectUsingSettings();
+    }
+```
+
+Nach der Serververbindung müssen wir uns noch mit einem Raum verbinden:
+```cs
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Connected to master");
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 4 }, null);
+    }
+```
+Hier verbinden wir uns mit einem Raum namens "Room" und begrenzen den direkt auf maximal 4 Spieler. Durch den hardcoded namen kommen alle clients immer in denselben Raum. (Der raum wird resetted sobald kein Spieler mehr in dem Raum verbunden ist)
+
+Nun bauen wir noch eine möglichkeit ein weitere Objekte zu spawnen:
+```cs
+    private void Update()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (PhotonNetwork.IsConnectedAndReady)
+            {
+                PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 2, Quaternion.identity);
+            }
+        }
+    }
+```
+
+# Spielerkonvertierung
+Damit wir nicht versuchen "fremde" Spieler zu steuern müssen wir zunächst die Steuerung von der Ownership abhängig machen.
+Wir stellen unsere "Monobehaviour" Ableitung auf "MonobehaviourPun" um für bequeme zusatzfunktionen. Dies sollte nur gemacht werden wenn das gleiche Gameobject auch eine photonview besitzt.
+
+(nur die geänderten Zeilen)
+```cs
+[...]
 
 using Photon.Pun;
 
-using Photon.Realtime;
-
-public class PUNController : MonoBehaviourPunCallbacks, IPunOwnershipCallbacks
+public class PlayerController : MonoBehaviourPun
 
 {
 
-    public override void OnConnectedToMaster()
+	[...]
+    void FixedUpdate()
 
     {
 
-    }
+        if (photonView.IsMine)
 
-    public override void OnJoinedRoom()
+        {
 
-    {
+			[...]
 
-    }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-
-    {
-
-    }
-
-    public override void OnLeftRoom()
-
-    {
-
-    }
-
-    public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
-
-    {
-
-    }
-
-    public void OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
-
-    {
-
-    }
-
-    public void OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest)
-
-    {
+        }
 
     }
 
 }
 ```
 
-Beachte die Imports und Parentklasse & Interface.
+# Spielerprefab
+### Komponenten
+Damit der Spieler gesynct wird brauchen wir eine photonview für den generellen sync und ein "photon transform view" für den Position/rotations sync.
+![](attachments/Pasted%20image%2020220904151346.png)
+![](attachments/Pasted%20image%2020220904151349.png)
+Wir stellen die Photonview noch auf "Ownershiptransfer: Request" ein:
+![](attachments/Pasted%20image%2020220904153923.png)
 
-Wie oben erwähnt brauchen wir einen Raum um tatsächlich verbunden zu sein. Daher verbinden wir uns immer den gleichen Raum direkt nach Verbindung zum Master. Das ist nur für simple Projekte empfohlen, ansonsten sollte man das über Hauptmenü, auswahl usw zu machen.
+
+### Tag
+Für später wollen wir die Objekte identifizieren können. Daher vergeben wir dem Objekt das Tag "Player".
+![](attachments/Pasted%20image%2020220904153718.png)
+
+### Prefab
+Jetzt ziehen wir den Spieler in den Inspector um ein Prefab anzulegen und löschen ihn danach aus der Szene:
+![](attachments/Pasted%20image%2020220904154244.png)
+Wir legen dafür noch einen "\_Prefab\\Resources" Ordner an. Alle photon prefabs müssen in einem "Resources" Ordner liegen. Sonst können sie nicht live geladen werden.
+
+# Photoncontroller
+Wir legen ein leeres Gameobject an, geben dem das PhotonControllerscript und ziehen das erstellte Playerprefab rein:
+![](attachments/Pasted%20image%2020220904154052.png)
+
+
+# Destroy
+Wir passen noch unser "DeathCollider" an dass er auch über das Netzwerk die Gameobjects richtig zerstört. "Normales" lokales zerstören hinterlässt Probleme bei anderen Spielern da diese dann die Spieler besitzen.
+Dazu verwenden wir einfach das PhotonNetwork.Destroy statt dem normalen:
 ```cs
-public override void OnConnectedToMaster()
-
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
+public class DeathCollider : MonoBehaviour
 {
-
-    PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 4 }, null);
-
-}
-
-public override void OnJoinedRoom()
-
-{
-
-    // called when we join a room
-
-}
-
-public override void OnPlayerEnteredRoom(Player newPlayer)
-
-{
-
-    // called when a player enters the room
-
-}
-
-public override void OnLeftRoom()
-
-{
-
-    // called when we leave the room
-
+    private void OnCollisionEnter(Collision other)
+    {
+        PhotonNetwork.Destroy(other.gameObject);
+    }
 }
 ```
-# Spielerkonvertierung
+
+# Testen
+Nun kann man diesen sanften Multiplayer ansatz testen:
+`CTRL + P` für build & run und play mode aktivieren (oder zwei mal builden). Damit kann man zwei spieler einfach simulieren.
+
+Mit WASD kann man seinen eigenen Spieler bewegen, mit Q/E rotieren und mit Leertaste einen neuen Spawnen.
+

@@ -70,6 +70,7 @@ Danach geben wir denen direkt eine simple Albedo Farbe von Blau und Rot jeweils:
 Mit drag and drop dann den 4 Wänden einzeln zuweisen:
 ![](attachments/Pasted%20image%2020220831171527.png)
 
+(Optional geben wir dem Boden noch ein extra Material namens "Boden" das leicht gräulich ist)
 
 ### SpielerObjekt erstellung
 Wir legen ein leeres GameObject an: 
