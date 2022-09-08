@@ -77,7 +77,8 @@ After this your PC is connected to the Hololens device portal and you can close 
 [Introduction to the Mixed Reality Toolkit--Set Up Your Project and Use Hand Interaction - Learn | Microsoft Docs](https://docs.microsoft.com/en-us/learn/modules/learn-mrtk-tutorials/1-1-introduction?tabs=openxr&ns-enrollment-type=learningpath&ns-enrollment-id=learn.azure.beginner-hololens-2-tutorials)
 After completing this tutorial you should have covered all basics of the MRTK installation and usage.
 
-### **The rest below is optional and in case the tutorial gets taken down. Everything down this document should already be covered**
+# **<span style="color:red">The rest below is optional and in case the tutorial gets taken down. Everything down this document should already be covered</span>**
+
 
 # Unity project
 ![](attachments/Pasted%20image%2020220420000209.png)

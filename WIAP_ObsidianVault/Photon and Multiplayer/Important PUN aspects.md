@@ -1,2 +1,0 @@
-### Destroying Objects
-It's important to note when PhotonNetwork.Destroy() can be called by multiple sources, that there should be check of (gameobject.PhotonView.isActiveAndEnabled == true) beforehand. Destroy being called multiple times can lead to the PhotonView already destroyed and causing an Error. On the first call the above mentionend Variable always seems to be updated immidiatly and can prevent the Error from happening.

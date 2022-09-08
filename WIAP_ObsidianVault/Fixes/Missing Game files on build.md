@@ -1,0 +1,2 @@
+For the Build to work you have to put the `_Games` folder in the unity data folder locally (`[Name_of_buildfolder]\MR_Unity_Data\_Games`).
+It expects the hardcoded paths given in the gameimporter class.
