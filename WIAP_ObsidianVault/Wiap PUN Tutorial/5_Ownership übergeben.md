@@ -1,5 +1,5 @@
 # PhotonController handler
-In PhotonController bauen wir den Ownership handler ein. Es muss über den PUNCallback auf eine Ownershiprequest reagiert werden. Das kann an beliebigen Orten passieren, aber die Empfehlung ist das in einer Klasse gesammlt zu handeln. Am einfachsten am gleichen ort wo die anderen Callbacks genutzt werden (also Raumjoin usw)
+In PhotonController bauen wir den Ownership-Handler ein. Es muss über den PUNCallback auf eine Ownershiprequest reagiert werden. Das kann an beliebigen Orten passieren, aber die Empfehlung ist, das in einer Klasse gesammelt zu behandeln. Am einfachsten am gleichen Ort, wo die anderen Callbacks genutzt werden (also Raumjoin usw.).
 ```cs
     public void OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
     {
@@ -26,7 +26,7 @@ Um die Übergaben zu visualiesieren färben wir die "gestohlenen Objekte" beim v
     }
 ```
 # Player collision
-Wenn einer unserer Spieler mit einem der "gegner" collidiert fragen wir nach ownership. Dafür müssen wir folgendes tun:
+Wenn einer unserer Spieler mit einem der "Gegner" collidiert, fragen wir nach Ownership. Dafür müssen wir folgendes tun:
 ```cs
     private void OnCollisionEnter(Collision other)
     {

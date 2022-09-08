@@ -60,14 +60,14 @@ public class PlayerController : MonoBehaviour
 
 }
 ```
-Hier ein simpler physik basierter bewegunsansatz.
+Hier ein simpler, physik-basierter Bewegunsansatz.
 # Input anpassung
-Damit die Fire Knöpfe richtig reagieren müssen wir noch in den Projectsettings die beiden Tasten definieren (wir nehmen mal Q und E damit die gut zu den WASD passen):
+Damit die Fire-Knöpfe richtig reagieren, müssen wir noch in den Projectsettings die beiden Tasten definieren (wir nehmen mal Q und E damit die gut zu den WASD passen):
 ![](attachments/Pasted%20image%2020220831174856.png)
 ![](attachments/Pasted%20image%2020220831174958.png)
 
 # Kill skript für Todeszonen (zB Wände)
-Um die Wände als Todeszonen zu deklarieren können wir ein simples Skript schreiben wie folgt:
+Um die Wände als Todeszonen zu deklarieren, können wir ein simples Skript schreiben wie folgt:
 ```cs
 using System.Collections;
 
@@ -87,18 +87,18 @@ public class DeathCollider : MonoBehaviour
 
 }
 ```
-Damit löschen wir alles was mit uns kollidiert
+Damit löschen wir alles  was mit uns kollidiert.
 
 ### Zuweisung
-Wir weisen den PlayerController auf das "Player" objekt zu und das Killskript an alle 4 wände.
+Wir weisen den PlayerController auf das "Player"-Objekt zu und das Killskript an alle 4 Wände.
 ![](attachments/Pasted%20image%2020220831174332.png)
 
 
 # Playmode & Quickbuild
-Um die App zu testen brauchen wir später zwei Instanzen, daher hier auch zum testen direkt beide:
-Der normale Unity play mode -> einfach mit dem Play button oben das Spiel starten.
-Automatisch build & run: `CTRL + B`
-Der build fragt nach einem Ordner. Dafür legen wir einen neuen Ordner "Build" an und wählen diesen aus:
+Um die App zu testen, brauchen wir später zwei Instanzen: Daher hier auch zum Testen direkt beide:
+Der normale Unity "play mode" -> einfach mit dem Play-Button oben das Spiel starten.
+Automatisch "build & run": `CTRL + B`
+Der Build fragt nach einem Ordner. Dafür legen wir einen neuen Ordner "Build" an und wählen diesen aus:
 ![](attachments/Pasted%20image%2020220831174634.png)
 
 
