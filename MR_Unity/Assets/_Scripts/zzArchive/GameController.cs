@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace WiapMR.GameScripts
-{
+// namespace WiapMR.GameScripts
+// {
     public class GameController : MonoBehaviour
     {
         private static bool _gameSpawned = false;
@@ -11,4 +11,4 @@ namespace WiapMR.GameScripts
             _gameSpawned = true;
         }
     }
-}
+// }

@@ -105,7 +105,6 @@ namespace WiapMR.GameScripts
             GameObject boardObj = new GameObject("GameBoard");
             this.GameRoot = gameRoot;
             this.GameBoard = boardObj;
-            boardObj.AddComponent<GameController>();
             GameData gameData = new GameData(serializedGD);
             GameData = gameData;
             PieceSpawnController psc = gameRoot.AddComponent<PieceSpawnController>();
