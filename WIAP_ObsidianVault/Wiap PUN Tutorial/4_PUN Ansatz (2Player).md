@@ -1,4 +1,4 @@
-# Erklärungen
+[Zurück zur Übersicht](0_Tutorial%20Intro.md)# Erklärungen
 ### Aufbau
 PUN funktioniert so, dass sich jeder Client mit dem PUN-Server verbindet. Der Server kümmert sich ausschließlich um das Verbinden der Spieler und Verteilen von Nachrichten. Die eigentliche Rechenarbeit läuft verteilt auf allen Clients.
 Da man lokal gerne "Echtzeit"-physics hätte, wird das standardmäßig lokal auch berechnet und dann mit Online-Daten "korrigiert". Daher muss man aufpassen, was, wie und von wem bewegt wird.
