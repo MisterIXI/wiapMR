@@ -9,7 +9,7 @@ Nun skalieren wir den auf 20,1,20:
 
 ### Wände
 Nun erstellen wir noch einen Cube den wir "Wall" nennen.
-Den nun markieren und `CTRL + D` 3x betätigen. Nun müssten wir insgesamt Folgende Objekte haben:
+Den nun markieren und `CTRL + D` 3x betätigen. Nun müssten wir insgesamt folgende Objekte haben:
 - Main Camera
 - Directional Light
 - Floor
@@ -55,19 +55,19 @@ Rotation: 50  0   0
 Scale:    1   1   1
 ```
 ### Ordnerstruktur
-Wir erstellen nun zwei neue Ordner in unserer Projektstruktur:
+Wir erstellen nun zwei, neue Ordner in unserer Projektstruktur:
 ![](attachments/Pasted%20image%2020220831170931.png)
 Rechtsklick auf "Assets"; Hier auf Create->Folder
-Dann einmal den namen "\_Material" und "\_Scripts" erstellen.
+Dann einmal die Ordner mit den Namen "\_Material" und "\_Scripts" erstellen.
 
 ### Materialien
-Wir erstellen jetzt Zwei Materialien die wir "Rot" und "Blau" nennen:
+Wir erstellen jetzt zwei Materialien, die wir "Rot" und "Blau" nennen:
 ![](attachments/Pasted%20image%2020220831171202.png)
 
 Danach geben wir denen direkt eine simple Albedo Farbe von Blau und Rot jeweils:
 ![](attachments/Pasted%20image%2020220831171440.png)
 
-Mit drag and drop dann den 4 Wänden einzeln zuweisen:
+Mit "drag and drop" dann den 4 Wänden einzeln zuweisen:
 ![](attachments/Pasted%20image%2020220831171527.png)
 
 (Optional geben wir dem Boden noch ein extra Material namens "Boden" das leicht gräulich ist)
@@ -78,7 +78,7 @@ Wir legen ein leeres GameObject an:
 Das nennen wir Spieler und geben über RMB->3D Object->Cylinder einen Cylinder und einen Cube als Body und positionieren den über die Gizmos folgendermaßen:
 ![](attachments/Pasted%20image%2020220831171826.png)
 
-Dem Spieler geben wir nun einen Rigibody und frieren die Rotation der X, Y und  Z Achsen ein:
+Dem Spieler geben wir nun einen Rigidbody und frieren die Rotation der X, Y und  Z Achsen ein:
 ![](attachments/Pasted%20image%2020220831172253.png)
 ![](attachments/Pasted%20image%2020220831173948.png)
-Die kann kurz getestet werden indem die Szene kurz in den Play modus gesetzt wird. Wenn der Spieler über dem Spielfeld schwebt sollte er runterfallen und vom Boden gestoppt werden. (Außerdem nicht umfallen)
+Die kann kurz getestet werden, indem die Szene kurz in den Play-Modus gesetzt wird. Wenn der Spieler über dem Spielfeld schwebt, sollte er runterfallen und vom Boden gestoppt werden. (Außerdem nicht umfallen)
