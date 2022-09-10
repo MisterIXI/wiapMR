@@ -103,6 +103,9 @@ A modular class syncing the helperobjects of heads and boards.
 - Spreads the given name to other instances via RPC.
 - Spawns head of other Players
 
-# \_zzPrefabsOld
+# \_zzArchive
 This folder is basically an archive for old and "deleted" scripts.
 All these scripts can be considered removed, but still browsed for inspiration/help
+
+# \_zzPrefabsOld
+This folder holds all prefabs that were used either in prototyping or in tutorials for testing. These prefabs also are still used in zzArchive projects/scripts.
