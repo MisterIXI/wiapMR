@@ -3,6 +3,9 @@ A university project about VR/AR (Mixed reality). This project utilizes the [Uni
 
 It is a barebones online multiplayer tabletop platform. You can import a custom game and gamepieces and then spawn them and play. Currently due to time constraints it is limited in functionality, but it could pretty easily be expanded upon.
 
+![image](https://github.com/user-attachments/assets/01da9bc2-7ed8-4c2e-84d9-509ce7d94821)
+
+
 # Project tree
 In this project there are three folders:
 - `MR_Unity`  -> the actual unity project (created in Unity 2021.3.6f1)
