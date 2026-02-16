@@ -5,6 +5,12 @@ It is a barebones online multiplayer tabletop platform. You can import a custom 
 
 ![image](https://github.com/user-attachments/assets/01da9bc2-7ed8-4c2e-84d9-509ce7d94821)
 
+Short video demo (capturing the Hololens lagged and bit and had delay):
+
+
+https://github.com/user-attachments/assets/25bdf6a8-0ed6-40ae-aa62-b64715b56249
+
+
 
 # Project tree
 In this project there are three folders:
